@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<!-- Application log (excluding 3rd party logs) rolling file appender (INFO 
+		level) -->
+
+	<appender name="APPLICATIONLOG"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<filter class="com.temples.in.ingest_util.LogFilter" />
+		<file>/var/log/temples/temples-ingester.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>/var/log/temples/temples-ingester.log.%i.zip
+			</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>20</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>20MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>%-5level [%thread] %date{ISO8601} %F:%L - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Complete log (including 3rd party logs) rolling file appender (INFO 
+		level) -->
+
+	<appender name="COMPLETELOG"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<file>/var/log/temples/temples-ingester-detailed.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>/var/log/temples/temples-ingester-detailed.log.%i.zip
+			</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>20</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>20MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>%-5level [%thread] %date{ISO8601} %F:%L - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- DEBUGLOG (excluding 3rd party) rolling file appender (all levels) -->
+
+	<appender name="DEBUGLOG"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="com.temples.in.ingest_util.LogFilter" />
+		<file>/var/log/temples/temples-ingester-debug.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>/var/log/temples/temples-ingester-debug.log.%i.zip
+			</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>20</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>20MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>%-5level [%thread] %date{ISO8601} %F:%L - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- DEBUGLOGDETAIL (including 3rd party) rolling file appender (all levels) -->
+
+	<appender name="DEBUGLOGDETAIL"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>/var/log/temples/temples-ingester-debug-detailed.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>/var/log/temples/temples-ingester-debug-detailed.log.%i.zip
+			</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>20</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy
+			class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>20MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>%-5level [%thread] %date{ISO8601} %F:%L - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- ASYNCLOG assynchronous appender (all levels) -->
+
+	<appender name="ASYNCDEBUGLOG" class="ch.qos.logback.classic.AsyncAppender">
+		<queueSize>1024</queueSize>
+		<discardingThreshold>0</discardingThreshold>
+		<includeCallerData>true</includeCallerData>
+		<appender-ref ref="DEBUGLOG" />
+	</appender>
+
+	<!-- ASYNCLOGDETAIL assynchronous appender (all levels) -->
+
+	<appender name="ASYNCDEBUGLOGDETAIL" class="ch.qos.logback.classic.AsyncAppender">
+		<queueSize>1024</queueSize>
+		<discardingThreshold>0</discardingThreshold>
+		<includeCallerData>true</includeCallerData>
+		<appender-ref ref="DEBUGLOGDETAIL" />
+	</appender>
+
+	<!-- STDOUT console appender to stdout (INFO level) -->
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
+		<encoder>
+			<pattern>%-5level %date{HH:mm:ss,SSS} %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Uncomment bellow and corresponding appender-ref to activate logback 
+		metrics <appender name="LogbackMetrics" class="com.codahale.metrics.logback.InstrumentedAppender" 
+		/> -->
+
+	<root level="INFO">
+		<appender-ref ref="APPLICATIONLOG" />
+		<appender-ref ref="COMPLETELOG" />
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="ASYNCDEBUGLOG" /> <!-- Comment this line to disable debug.log -->
+		<appender-ref ref="ASYNCDEBUGLOGDETAIL" /> <!-- Comment this line to disable debug.log -->
+		<!-- <appender-ref ref="LogbackMetrics" /> -->
+	</root>
+
+	<logger name="com.temples.in" level="DEBUG" />
+</configuration>
