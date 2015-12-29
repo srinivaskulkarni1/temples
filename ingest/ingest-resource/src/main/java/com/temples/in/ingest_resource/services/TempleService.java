@@ -14,7 +14,6 @@ import com.temples.in.ingest_util.BeanConstants;
 public class TempleService implements ApplicationContextAware, ITempleService {
 
 	private AbstractApplicationContext context;
-	private IDataLoader dataLoader;
 	private static Logger LOGGER = LoggerFactory.getLogger(TempleService.class);
 
 	
@@ -22,7 +21,7 @@ public class TempleService implements ApplicationContextAware, ITempleService {
 	public Temple addTemple(Temple temple) {
 		LOGGER.debug("Processing {}.addTemple", TempleService.class.getSimpleName());
 
-		this.dataLoader = (IDataLoader) context.getBean(BeanConstants.DATA_LOADER);
+		IDataLoader dataLoader = (IDataLoader) context.getBean(BeanConstants.DATA_LOADER);
 		Temple newTemple = dataLoader.addTemple(temple);
 		LOGGER.debug("Processed {}.addTemple", TempleService.class.getSimpleName());
 

@@ -28,7 +28,6 @@ import com.temples.in.ingest_util.BeanConstants;
 @Consumes(MediaType.APPLICATION_JSON)
 public class TempleResource {
 	private AbstractApplicationContext context;
-	private ITempleService templeService;
 	private static Logger LOGGER = LoggerFactory
 			.getLogger(TempleResource.class);
 
@@ -62,19 +61,22 @@ public class TempleResource {
 			@Context SecurityContext securityContext) {
 
 		String incomingIP = requestContext.getRemoteAddr();
-		URI uri = uriInfo.getAbsolutePathBuilder()
-				.path(temple.getPlace() + "/" + temple.getGod()).build();
+		String place = temple.getPlace();
+		String god = temple.getGod();
+
+		URI uri = uriInfo.getAbsolutePathBuilder().path(place + "/" + god)
+				.build();
 
 		LOGGER.info(
 				"Processing | POST | addTemple | Parameters | {},{} | Remote Host | {}",
-				temple.getPlace(), temple.getGod(), incomingIP);
-		templeService = (ITempleService) context
+				place, god, incomingIP);
+		ITempleService templeService = (ITempleService) context
 				.getBean(BeanConstants.TEMPLE_SERVICE);
 
 		Temple newTemple = templeService.addTemple(temple);
 		LOGGER.info(
 				"Processed | POST | addTemple | Parameters | {},{} | Remote Host | {}",
-				temple.getPlace(), temple.getGod(), incomingIP);
+				place, god, incomingIP);
 
 		if (newTemple == null) {
 			return Response.serverError().status(Status.INTERNAL_SERVER_ERROR)

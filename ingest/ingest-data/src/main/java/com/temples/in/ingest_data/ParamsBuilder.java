@@ -27,35 +27,39 @@ public class ParamsBuilder implements ApplicationContextAware, IParamsBulder {
 
 		List<Params> paramsList = new ArrayList<Params>();
 
-		if (temple.getGod() != null) {
+		String god = temple.getGod();
+		if (god != null) {
 			Params params1 = (Params) context.getBean(BeanConstants.PARAMS);
-			params1.setType(temple.getGod().getClass());
+			params1.setType(god.getClass());
 			params1.setName(DBConstants.TABLE_TEMPLE_GOD);
-			params1.setValue(temple.getGod());
+			params1.setValue(god);
 			paramsList.add(params1);
 		}
 
-		if (temple.getPlace() != null) {
+		String place = temple.getPlace();
+		if (place != null) {
 			Params params2 = (Params) context.getBean(BeanConstants.PARAMS);
-			params2.setType(temple.getPlace().getClass());
+			params2.setType(place.getClass());
 			params2.setName(DBConstants.TABLE_TEMPLE_PLACE);
-			params2.setValue(temple.getPlace());
+			params2.setValue(place);
 			paramsList.add(params2);
 		}
 
-		if (temple.getDistrict() != null) {
+		String district = temple.getDistrict();
+		if (district != null) {
 			Params params3 = (Params) context.getBean(BeanConstants.PARAMS);
-			params3.setType(temple.getDistrict().getClass());
+			params3.setType(district.getClass());
 			params3.setName(DBConstants.TABLE_TEMPLE_DISTRICT);
-			params3.setValue(temple.getDistrict());
+			params3.setValue(district);
 			paramsList.add(params3);
 		}
 
-		if (temple.getState() != null) {
+		String state = temple.getState();
+		if (state != null) {
 			Params params4 = (Params) context.getBean(BeanConstants.PARAMS);
-			params4.setType(temple.getState().getClass());
+			params4.setType(state.getClass());
 			params4.setName(DBConstants.TABLE_TEMPLE_STATE);
-			params4.setValue(temple.getState());
+			params4.setValue(state);
 			paramsList.add(params4);
 		}
 

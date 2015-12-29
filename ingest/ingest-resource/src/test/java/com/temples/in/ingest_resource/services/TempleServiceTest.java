@@ -1,26 +1,29 @@
 package com.temples.in.ingest_resource.services;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.AbstractApplicationContext;
 
+import com.temples.in.data_model.Temple;
 import com.temples.in.ingest_data.IDataLoader;
-@Ignore
+import com.temples.in.ingest_util.BeanConstants;
 @RunWith(MockitoJUnitRunner.class)
 public class TempleServiceTest {
 
 	@Mock
 	AbstractApplicationContext context;
-	
-	@Mock
-	IDataLoader dataLoader;
 	
 	@Autowired
 	@InjectMocks
@@ -32,16 +35,19 @@ public class TempleServiceTest {
     }
 	
 	@Test
-	public void testGetTempleList() {
-/*		List<ITemple> templeList = TestData.getDummyTempleList();
+	public void testAddTemple() {
 		
+		Temple temple =  Mockito.mock(Temple.class);
+		IDataLoader dataLoader = Mockito.mock(IDataLoader.class);
+		Temple newTemple = Mockito.mock(Temple.class);
+
+		when(dataLoader.addTemple(temple)).thenReturn(newTemple);
 		when(context.getBean(BeanConstants.DATA_LOADER)).thenReturn(dataLoader);
-		when(dataLoader.getTemples()).thenReturn(templeList);
-		
-		assertEquals(service.getTemples(), templeList);
+
+		assertEquals(service.addTemple(temple), newTemple);
 
 		verify(context, times(1)).getBean(BeanConstants.DATA_LOADER);
-		verify(dataLoader, timeout(1)).getTemples();
-*/	}
+		verify(dataLoader, times(1)).addTemple(temple);
+	}
 
 }

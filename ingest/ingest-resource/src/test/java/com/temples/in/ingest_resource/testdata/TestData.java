@@ -1,5 +1,7 @@
 package com.temples.in.ingest_resource.testdata;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,5 +18,23 @@ public class TestData {
 		t.setState("Karnataka");
 		templeList.add(t);
 		return templeList;
+	}
+	
+	public static Temple getNewTemple(){
+		Temple t = new Temple();
+		t.setDistrict("Udupi");
+		t.setGod("Shri Krishna");
+		t.setPlace("Udupi");
+		t.setState("Karnataka");
+		return t;
+	}
+	
+	public static URI getURI() {
+		try {
+			return new URI("test");
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
