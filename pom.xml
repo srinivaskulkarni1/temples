@@ -21,6 +21,7 @@
 		<module>data-model</module>	
 		<module>ingest</module>
     <module>common-utils</module>
+    <module>queue-processor</module>
   </modules>
 	
 	<build>

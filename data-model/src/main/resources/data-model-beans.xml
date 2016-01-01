@@ -8,6 +8,10 @@
 
 	<bean id="temple" class="com.temples.in.data_model.Temple" scope="prototype" />
 
+	<bean id="entityinfo" class="com.temples.in.data_model.wrapper.EntityInfo" scope="prototype" />
+
+	<bean id="primarykey" class="com.temples.in.data_model.wrapper.PrimaryKey" scope="prototype" />
+
 	<context:annotation-config />
 	<context:component-scan base-package="com.temples.in.data_model" />
 

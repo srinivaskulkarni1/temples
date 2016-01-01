@@ -1,0 +1,6 @@
+1. Unit tests
+2. spring annotations instead of beans
+3. cassandra layer unit testing
+4. Automation testing
+5. query-processor - logback.xml is not external
+ 

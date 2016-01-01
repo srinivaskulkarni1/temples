@@ -6,7 +6,6 @@ public class Temple {
 	
 	private String god;
 	private String place;
-	
 	private String state;
 	private String district;
 

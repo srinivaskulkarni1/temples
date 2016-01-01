@@ -13,8 +13,12 @@ public class Configuration extends PropertyPlaceholderConfigurer {
 	private static Map<String, String> propertiesMap;
 	private int springSystemPropertiesMode = SYSTEM_PROPERTIES_MODE_FALLBACK;
 
-	public static String DB_CONNECT_RETRY_ATTEMPTS = "db.connect.retry.attempts";
-	public static String DB_CONNECT_RETRY_DELAY = "db.connect.retry.delay";
+	public static final String DB_CONNECT_RETRY_ATTEMPTS = "db.connect.retry.attempts";
+	public static final String DB_CONNECT_RETRY_DELAY = "db.connect.retry.delay";
+	public static final String QUEUE_NAME = "queue.name";
+	public static final String QUEUE_HOST = "queue.host";
+	public static final String INGEST_EXCHANGE = "queue.exchange";
+	public static final String NUM_CONSUMERS = "queue.consumers";
 
 	@Override
 	public void setSystemPropertiesMode(int systemPropertiesMode) {

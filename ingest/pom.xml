@@ -12,6 +12,21 @@
 	<artifactId>ingest</artifactId>
 	<packaging>pom</packaging>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+			<groupId>com.temples.in</groupId>
+			<artifactId>data-model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.temples.in</groupId>
+				<artifactId>common-utils</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+		
 	<developers>
 		<developer>
 			<id>srinivas</id>
@@ -25,14 +40,10 @@
  		<module>ingest-util</module>	
  		<module>ingest-data</module>
  		<module>ingest-resource</module>
-    <module>ingest-interface</module>
-  </modules>
+		<module>ingest-interface</module>
+	</modules>
 	
 	<build>
 		<plugins/>
 	</build>
-
-	<dependencyManagement>
-		<dependencies/>
-</dependencyManagement>
 </project>

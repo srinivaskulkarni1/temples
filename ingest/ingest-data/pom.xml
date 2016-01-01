@@ -25,12 +25,10 @@
 		<dependency>
 			<groupId>com.temples.in</groupId>
 			<artifactId>data-model</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.temples.in</groupId>
 			<artifactId>common-utils</artifactId>
-			<version>${project.version}</version>
 		</dependency>		
 		<dependency>
 			<groupId>com.temples.in</groupId>
