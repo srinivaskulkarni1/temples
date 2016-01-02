@@ -21,7 +21,7 @@
 		<module>data-model</module>	
 		<module>ingest</module>
     <module>common-utils</module>
-    <module>queue-processor</module>
+    <module>consume</module>
     <module>ingest-client</module>
   </modules>
 	

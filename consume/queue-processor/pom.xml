@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.temples.in</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>consume</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>queue-processor</artifactId>
@@ -25,7 +25,6 @@
 		<dependency>
 			<groupId>com.temples.in</groupId>
 			<artifactId>common-utils</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
