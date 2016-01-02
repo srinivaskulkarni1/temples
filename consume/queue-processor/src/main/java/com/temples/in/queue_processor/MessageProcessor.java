@@ -1,5 +1,7 @@
 package com.temples.in.queue_processor;
 
+import javax.ws.rs.core.MediaType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -9,6 +11,9 @@ import org.springframework.context.support.AbstractApplicationContext;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import com.temples.in.consume_data.ITempleDataLoader;
 import com.temples.in.consume_util.BeanConstants;
 import com.temples.in.data_model.Temple;
@@ -31,7 +36,7 @@ public class MessageProcessor implements ApplicationContextAware {
 		Gson gson = new Gson();
 		EntityInfo entityInfo = null;
 		boolean bProcessed = false;
-		
+
 		try {
 			entityInfo = gson.fromJson(message, EntityInfo.class);
 		} catch (JsonSyntaxException e) {
@@ -54,8 +59,10 @@ public class MessageProcessor implements ApplicationContextAware {
 
 	}
 
-	private boolean handlePUTRequest(int consumerId, EntityInfo entityInfo) throws Exception {
-		LOGGER.debug("Consumer{}: Processing {}.handlePUTRequest", consumerId, MessageProcessor.class.getSimpleName());
+	private boolean handlePUTRequest(int consumerId, EntityInfo entityInfo)
+			throws Exception {
+		LOGGER.debug("Consumer{}: Processing {}.handlePUTRequest", consumerId,
+				MessageProcessor.class.getSimpleName());
 
 		if (entityInfo.getEntity().equals(Entity.TEMPLE)) {
 			try {
@@ -72,14 +79,43 @@ public class MessageProcessor implements ApplicationContextAware {
 
 			if (dataLoader != null) {
 				if (entityInfo.getEntity().equals(Entity.TEMPLE)) {
-					 Temple temple = dataLoader.getTemple(entityInfo.getPrimaryKey());
-					 if(temple != null){
-					 LOGGER.debug("Consumer{}: Request Entity | Temple | Primary Key | {}", consumerId, temple.getGod() + "," + temple.getPlace());
-					 }
+					Temple temple = dataLoader.getTemple(entityInfo
+							.getPrimaryKey());
+					if (temple != null) {
+						postDataToSearcher(consumerId, temple);
+					}
 				}
 			}
 		}
+		LOGGER.debug("Consumer{}: Processed {}.handlePUTRequest", consumerId,
+				MessageProcessor.class.getSimpleName());
 		return true;
+	}
+
+	private void postDataToSearcher(int consumerId, Temple temple) throws RuntimeException {
+		LOGGER.debug("Consumer{}: Processing {}.postDataToSearcher",
+				consumerId, MessageProcessor.class.getSimpleName());
+
+		Gson gson = new Gson();
+		String templeJson = gson.toJson(temple);
+		// to be moved to config
+		String requestURL = "http://localhost:9200/temples/temple";
+
+		LOGGER.info("Consumer{}: Posting data to searcher | URL | {} | message | {}", consumerId,
+				requestURL, templeJson);
+
+		Client client = Client.create();
+		WebResource webResource = client.resource(requestURL);
+		ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
+				.post(ClientResponse.class, templeJson);
+
+		if (response.getStatus() != 201) {
+			throw new RuntimeException("Consumer{" + consumerId + "}: Failed to post data to searcher | HTTP ERROR CODE : "
+					+ response.getStatus());
+		}
+
+		LOGGER.debug("Consumer{}: Processed {}.postDataToSearcher", consumerId,
+				MessageProcessor.class.getSimpleName());
 	}
 
 	@Override

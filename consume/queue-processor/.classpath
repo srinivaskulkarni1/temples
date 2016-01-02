@@ -4,6 +4,7 @@
   <classpathentry kind="src" path="src/main/java" including="**/*.java"/>
   <classpathentry kind="src" path="src/main/resources" excluding="**/*.java"/>
   <classpathentry kind="output" path="target/classes"/>
+  <classpathentry kind="var" path="M2_REPO/javax/ws/rs/jsr311-api/1.1.1/jsr311-api-1.1.1.jar" sourcepath="M2_REPO/javax/ws/rs/jsr311-api/1.1.1/jsr311-api-1.1.1-sources.jar"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
   <classpathentry kind="src" path="/consume-data"/>
   <classpathentry kind="src" path="/data-model"/>
@@ -34,4 +35,6 @@
   <classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar" sourcepath="M2_REPO/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/rabbitmq/amqp-client/3.6.0/amqp-client-3.6.0.jar" sourcepath="M2_REPO/com/rabbitmq/amqp-client/3.6.0/amqp-client-3.6.0-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/google/code/gson/gson/2.5/gson-2.5.jar" sourcepath="M2_REPO/com/google/code/gson/gson/2.5/gson-2.5-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-client/1.19/jersey-client-1.19.jar" sourcepath="M2_REPO/com/sun/jersey/jersey-client/1.19/jersey-client-1.19-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/sun/jersey/jersey-core/1.19/jersey-core-1.19.jar" sourcepath="M2_REPO/com/sun/jersey/jersey-core/1.19/jersey-core-1.19-sources.jar"/>
 </classpath>
