@@ -22,6 +22,7 @@
 		<module>ingest</module>
     <module>common-utils</module>
     <module>queue-processor</module>
+    <module>ingest-client</module>
   </modules>
 	
 	<build>

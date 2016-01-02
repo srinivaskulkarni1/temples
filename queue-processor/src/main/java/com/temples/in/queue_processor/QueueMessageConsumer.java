@@ -46,7 +46,7 @@ public class QueueMessageConsumer implements Consumer, Runnable {
 
 		String message = new String(body, "UTF-8");
 		try {
-			LOGGER.info("Recieved message | {}", message);
+			LOGGER.info("Consumer{} Recieved message | {}", id, message);
 		} catch (Exception e) {
 			LOGGER.error("Exception while processing queue message | {}",
 					message);

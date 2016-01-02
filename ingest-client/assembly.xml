@@ -12,12 +12,11 @@
       <directory>${project.basedir}</directory>
       <outputDirectory>/</outputDirectory>
       <includes>
-        <include>README*</include>
-        <include>LICENSE*</include>
 			<include>config.properties</include>
 			<include>logback.xml</include>
-			<include>start-consumer.bat</include>
-			<include>start-consumer.sh</include>		
+			<include>start-client.bat</include>
+			<include>start-client.sh</include>
+			<include>input.csv</include>		
       </includes>
     </fileSet>
  	<fileSet>

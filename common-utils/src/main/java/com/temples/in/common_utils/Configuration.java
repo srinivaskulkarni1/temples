@@ -19,6 +19,7 @@ public class Configuration extends PropertyPlaceholderConfigurer {
 	public static final String QUEUE_HOST = "queue.host";
 	public static final String INGEST_EXCHANGE = "queue.exchange";
 	public static final String NUM_CONSUMERS = "queue.consumers";
+	public static final String CLIENT_INGEST_URL = "client.ingest_url";
 
 	@Override
 	public void setSystemPropertiesMode(int systemPropertiesMode) {
