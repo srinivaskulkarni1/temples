@@ -38,6 +38,8 @@
 	
 	<modules>
  		<module>queue-processor</module>
+		<module>consume-data</module>
+		<module>consume-util</module>
 	</modules>
 	
 	<build>

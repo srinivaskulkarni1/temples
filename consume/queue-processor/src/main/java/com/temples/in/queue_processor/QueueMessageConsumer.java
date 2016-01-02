@@ -4,25 +4,46 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.support.AbstractApplicationContext;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.ShutdownSignalException;
+import com.temples.in.consume_util.BeanConstants;
 
-public class QueueMessageConsumer implements Consumer, Runnable {
+public class QueueMessageConsumer implements Consumer, Runnable,
+		ApplicationContextAware {
 
 	private Channel channel;
 	private String queueName;
 	private int id;
+	private AbstractApplicationContext context;
+
 	private static Logger LOGGER = LoggerFactory
 			.getLogger(QueueMessageConsumer.class);
 
-	public QueueMessageConsumer(Channel channel, String queueName, int id) {
+	public QueueMessageConsumer() {
+	}
+
+	public void setChannel(Channel channel) {
 		this.channel = channel;
+	}
+
+	public void setQueueName(String queueName) {
 		this.queueName = queueName;
+	}
+
+	public void setId(int id) {
 		this.id = id;
+	}
+
+	public int getId() {
+		return this.id;
 	}
 
 	@Override
@@ -45,13 +66,39 @@ public class QueueMessageConsumer implements Consumer, Runnable {
 			AMQP.BasicProperties properties, byte[] body) throws IOException {
 
 		String message = new String(body, "UTF-8");
+		LOGGER.info("Consumer{}: Received message | {}", id, message);
+		boolean bProcessed = false;
+
 		try {
-			LOGGER.info("Consumer{} Recieved message | {}", id, message);
+			MessageProcessor messageProcessor = (MessageProcessor) context
+					.getBean(BeanConstants.MESSAGE_PROCESSOR);
+			bProcessed = messageProcessor.process(id, message);
+		} catch (BeansException e) {
+			LOGGER.error(
+					"Consumer{}: BeansException while processing queue message | {}",
+					id, message);
+			LOGGER.debug(
+					"Consumer{}: Exception message | {}",
+					id, e.getLocalizedMessage());		
+			bProcessed = false;
 		} catch (Exception e) {
-			LOGGER.error("Exception while processing queue message | {}",
-					message);
+			LOGGER.error(
+					"Consumer{}: Exception while processing queue message | {}",
+					id, message);
+			LOGGER.debug(
+					"Consumer{}: Exception message | {}",
+					id, e.getLocalizedMessage());				
+			bProcessed = false;
 		} finally {
-			channel.basicAck(envelope.getDeliveryTag(), false);
+			if (bProcessed) {
+				LOGGER.info("Consumer{}: processed message | {}", id, message);
+				channel.basicAck(envelope.getDeliveryTag(), false);
+			} else {
+				LOGGER.warn("Consumer{}: failed to process message | {}", id,
+						message);
+				LOGGER.warn("Consumer{}: requeuing message | {}", id, message);
+				channel.basicReject(envelope.getDeliveryTag(), true);
+			}
 		}
 
 	}
@@ -70,7 +117,7 @@ public class QueueMessageConsumer implements Consumer, Runnable {
 	@Override
 	public void run() {
 		try {
-			LOGGER.debug("Starting consumer {}", id);
+			LOGGER.info("Starting consumer {}", id);
 			channel.basicConsume(queueName, false, this);
 		} catch (IOException e) {
 			LOGGER.error(
@@ -78,5 +125,11 @@ public class QueueMessageConsumer implements Consumer, Runnable {
 					e.getLocalizedMessage());
 		}
 
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
+		this.context = (AbstractApplicationContext) applicationContext;
 	}
 }
