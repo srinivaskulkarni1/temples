@@ -44,7 +44,7 @@
 			<artifactId>gson</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.jersey</groupId>
+			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
 		</dependency>
 	</dependencies>

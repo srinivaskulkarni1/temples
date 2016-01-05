@@ -19,7 +19,7 @@ import com.rabbitmq.client.MessageProperties;
 import com.temples.in.common_utils.Configuration;
 import com.temples.in.data_model.DataModelBeanConstants;
 import com.temples.in.data_model.wrapper.Action;
-import com.temples.in.data_model.wrapper.Entity;
+import com.temples.in.data_model.wrapper.EntityType;
 import com.temples.in.data_model.wrapper.EntityInfo;
 import com.temples.in.data_model.wrapper.PrimaryKey;
 
@@ -101,7 +101,7 @@ public class QueueManager implements ApplicationContextAware, IQueueManager {
 	}
 
 	
-	private String getQueueMessage(Action action, Entity entity,
+	private String getQueueMessage(Action action, EntityType entity,
 			Map<String, String> pkList){
 	
 		PrimaryKey primaryKey = (PrimaryKey) context.getBean(DataModelBeanConstants.PRIMARY_KEY);
@@ -109,7 +109,7 @@ public class QueueManager implements ApplicationContextAware, IQueueManager {
 		
 		EntityInfo entityInfo = (EntityInfo) context.getBean(DataModelBeanConstants.ENTITY_INFO);
 		entityInfo.setAction(action);
-		entityInfo.setEntity(entity);
+		entityInfo.setEntityType(entity);
 		entityInfo.setPrimaryKey(primaryKey);
 
 		Gson gson = new Gson();
@@ -124,7 +124,7 @@ public class QueueManager implements ApplicationContextAware, IQueueManager {
 	}
 
 	@Override
-	public boolean enqueue(Action action, Entity entity,
+	public boolean enqueue(Action action, EntityType entity,
 			Map<String, String> pkList) {
 		LOGGER.debug("Processing {}.enqueue",
 				QueueManager.class.getSimpleName());

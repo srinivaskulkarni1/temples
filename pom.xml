@@ -19,11 +19,12 @@
 	
 	<modules>
 		<module>data-model</module>	
+		<module>common-utils</module>
 		<module>ingest</module>
-    <module>common-utils</module>
-    <module>consume</module>
-    <module>ingest-client</module>
-  </modules>
+		<module>consume</module>
+		<module>query</module>
+		<module>ingest-client</module>
+    </modules>
 	
 	<build>
 		<plugins>
@@ -154,10 +155,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.jersey</groupId>
+			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
-			<version>1.19</version>
+			<version>${jersey.version}</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.rabbitmq</groupId>
 			<artifactId>amqp-client</artifactId>

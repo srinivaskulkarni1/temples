@@ -4,7 +4,7 @@ package com.temples.in.data_model.wrapper;
 public class EntityInfo {
 
 	private Action action;
-	private Entity entity;
+	private EntityType entityType;
 	private PrimaryKey primaryKey;
 
 	public Action getAction() {
@@ -15,12 +15,12 @@ public class EntityInfo {
 		this.action = action;
 	}
 
-	public Entity getEntity() {
-		return entity;
+	public EntityType getEntityType() {
+		return entityType;
 	}
 
-	public void setEntity(Entity entity) {
-		this.entity = entity;
+	public void setEntityType(EntityType entity) {
+		this.entityType = entity;
 	}
 
 	public PrimaryKey getPrimaryKey() {

@@ -28,7 +28,7 @@
 			<scope>import</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.sun.jersey</groupId>
+			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-client</artifactId>
 		</dependency>
 		<dependency>
@@ -43,7 +43,7 @@
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
-		</dependency>
+		</dependency>	
 	</dependencies>
 	
 	<build>

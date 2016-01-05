@@ -5,14 +5,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 
 public class RestRequest {
 
@@ -26,18 +27,18 @@ public class RestRequest {
 			read = new BufferedReader(new FileReader(jsonFilePath));
 
 			String line = read.readLine();
-			Client client = Client.create();
-			WebResource webResource = client.resource(ingestURL);
 			int successCount = 0;
 			int failureCount = 0;
+			
+			Client client = ClientBuilder.newClient();
+			WebTarget webTarget = client.target(ingestURL).path("temples");
 
 			while (true) {
 				LOGGER.info("Processing entry | {}", line);
 
-				ClientResponse response = webResource.type(
-						MediaType.APPLICATION_JSON).post(ClientResponse.class,
-						line);
-
+				Invocation.Builder invocationBuilder =  webTarget.request();
+				Response response = invocationBuilder.post(Entity.json(line));
+				
 				if (response.getStatus() != 201) {
 					failureCount++;
 					LOGGER.error("POST request failed | {} ", line);

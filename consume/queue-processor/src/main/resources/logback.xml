@@ -10,9 +10,9 @@
 			<level>INFO</level>
 		</filter>
 		<filter class="com.temples.in.common_utils.LogFilter" />
-		<file>/var/log/temples/query-processor/query-processor.log</file>
+		<file>/var/log/temples/queue-processor/queue-processor.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<fileNamePattern>/var/log/temples/query-processor/query-processor.log.%i.zip
+			<fileNamePattern>/var/log/temples/queue-processor/queue-processor.log.%i.zip
 			</fileNamePattern>
 			<minIndex>1</minIndex>
 			<maxIndex>20</maxIndex>
@@ -34,9 +34,9 @@
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>INFO</level>
 		</filter>
-		<file>/var/log/temples/query-processor/query-processor-detailed.log</file>
+		<file>/var/log/temples/queue-processor/queue-processor-detailed.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<fileNamePattern>/var/log/temples/query-processor/query-processor-detailed.log.%i.zip
+			<fileNamePattern>/var/log/temples/queue-processor/queue-processor-detailed.log.%i.zip
 			</fileNamePattern>
 			<minIndex>1</minIndex>
 			<maxIndex>20</maxIndex>
@@ -55,9 +55,9 @@
 	<appender name="DEBUGLOG"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<filter class="com.temples.in.common_utils.LogFilter" />
-		<file>/var/log/temples/query-processor/query-processor-debug.log</file>
+		<file>/var/log/temples/queue-processor/queue-processor-debug.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<fileNamePattern>/var/log/temples/query-processor/query-processor-debug.log.%i.zip
+			<fileNamePattern>/var/log/temples/queue-processor/queue-processor-debug.log.%i.zip
 			</fileNamePattern>
 			<minIndex>1</minIndex>
 			<maxIndex>20</maxIndex>
@@ -75,9 +75,9 @@
 
 	<appender name="DEBUGLOGDETAIL"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>/var/log/temples/query-processor/query-processor-debug-detailed.log</file>
+		<file>/var/log/temples/queue-processor/queue-processor-debug-detailed.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-			<fileNamePattern>/var/log/temples/query-processor/query-processor-debug-detailed.log.%i.zip
+			<fileNamePattern>/var/log/temples/queue-processor/queue-processor-debug-detailed.log.%i.zip
 			</fileNamePattern>
 			<minIndex>1</minIndex>
 			<maxIndex>20</maxIndex>

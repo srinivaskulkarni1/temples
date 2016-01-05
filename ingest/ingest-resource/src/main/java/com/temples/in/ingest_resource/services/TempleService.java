@@ -12,7 +12,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 
 import com.temples.in.data_model.Temple;
 import com.temples.in.data_model.wrapper.Action;
-import com.temples.in.data_model.wrapper.Entity;
+import com.temples.in.data_model.wrapper.EntityType;
 import com.temples.in.ingest_data.DBConstants;
 import com.temples.in.ingest_data.IDataLoader;
 import com.temples.in.ingest_util.BeanConstants;
@@ -40,7 +40,7 @@ public class TempleService implements ApplicationContextAware, ITempleService {
 					.getBean(BeanConstants.QUEUE_MANAGER);
 
 			boolean bSuccess = queueManager.enqueue(Action.PUT,
-					Entity.TEMPLE, pkList);
+					EntityType.TEMPLE, pkList);
 			if (!bSuccess) {
 				return null;
 			}

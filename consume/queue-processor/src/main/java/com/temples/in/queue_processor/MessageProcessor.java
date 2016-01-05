@@ -1,6 +1,11 @@
 package com.temples.in.queue_processor;
 
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,15 +16,12 @@ import org.springframework.context.support.AbstractApplicationContext;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import com.temples.in.consume_data.ITempleDataLoader;
 import com.temples.in.consume_util.BeanConstants;
 import com.temples.in.data_model.Temple;
 import com.temples.in.data_model.wrapper.Action;
-import com.temples.in.data_model.wrapper.Entity;
 import com.temples.in.data_model.wrapper.EntityInfo;
+import com.temples.in.data_model.wrapper.EntityType;
 
 public class MessageProcessor implements ApplicationContextAware {
 
@@ -64,7 +66,7 @@ public class MessageProcessor implements ApplicationContextAware {
 		LOGGER.debug("Consumer{}: Processing {}.handlePUTRequest", consumerId,
 				MessageProcessor.class.getSimpleName());
 
-		if (entityInfo.getEntity().equals(Entity.TEMPLE)) {
+		if (entityInfo.getEntityType().equals(EntityType.TEMPLE)) {
 			try {
 				dataLoader = (ITempleDataLoader) context
 						.getBean(BeanConstants.TEMPLE_DATA_LOADER);
@@ -78,7 +80,7 @@ public class MessageProcessor implements ApplicationContextAware {
 			}
 
 			if (dataLoader != null) {
-				if (entityInfo.getEntity().equals(Entity.TEMPLE)) {
+				if (entityInfo.getEntityType().equals(EntityType.TEMPLE)) {
 					Temple temple = dataLoader.getTemple(entityInfo
 							.getPrimaryKey());
 					if (temple != null) {
@@ -104,11 +106,11 @@ public class MessageProcessor implements ApplicationContextAware {
 		LOGGER.info("Consumer{}: Posting data to searcher | URL | {} | message | {}", consumerId,
 				requestURL, templeJson);
 
-		Client client = Client.create();
-		WebResource webResource = client.resource(requestURL);
-		ClientResponse response = webResource.type(MediaType.APPLICATION_JSON)
-				.post(ClientResponse.class, templeJson);
-
+		Client client = ClientBuilder.newClient();
+		WebTarget webTarget = client.target(requestURL);
+		Invocation.Builder invocationBuilder =  webTarget.request();
+		Response response = invocationBuilder.post(Entity.json(templeJson));
+				
 		if (response.getStatus() != 201) {
 			throw new RuntimeException("Consumer{" + consumerId + "}: Failed to post data to searcher | HTTP ERROR CODE : "
 					+ response.getStatus());
