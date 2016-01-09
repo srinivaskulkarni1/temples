@@ -10,7 +10,7 @@
 
 	<bean id="templeservice" class="com.temples.in.ingest_resource.services.TempleService" />
 	<bean id="queuemanager" class="com.temples.in.ingest_resource.services.QueueManager" />
-
+	<bean id="errorresponse" class="com.temples.in.ingest_resource.resources.ErrorResponse" scope="prototype"/>
 	<context:annotation-config />
 	<context:component-scan base-package="com.temples.in.ingest_resource" />
 

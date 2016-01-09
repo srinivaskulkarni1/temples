@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,6 +20,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 import com.temples.in.data_model.Temple;
 import com.temples.in.ingest_data.IDataLoader;
 import com.temples.in.ingest_util.BeanConstants;
+@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class TempleServiceTest {
 

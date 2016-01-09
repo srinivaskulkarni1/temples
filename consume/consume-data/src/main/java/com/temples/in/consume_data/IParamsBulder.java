@@ -6,6 +6,6 @@ import com.temples.in.data_model.wrapper.PrimaryKey;
 
 public interface IParamsBulder {
 
-	public abstract List<Params> build(PrimaryKey primaryKey);
+	public abstract List<Params> build(int consumerId, String entityId, PrimaryKey primaryKey);
 
 }

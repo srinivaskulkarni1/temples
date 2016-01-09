@@ -60,7 +60,7 @@ public class DataLoaderTest {
 		when(dbConnection.getSession()).thenReturn(session);
 		when(paramsBuilder.buildTempleParams(temple)).thenReturn(paramsList);
 		when(
-				insertStatementExecutor.executeInsert(session,
+				insertStatementExecutor.executeInsert(temple.getId(), session,
 						QueryStrings.TEMPLE_INSERT_QUERY, paramsList))
 				.thenReturn(true);
 
@@ -71,7 +71,7 @@ public class DataLoaderTest {
 		verify(context, times(1)).getBean(BeanConstants.PARAMS_BUILDER);
 		verify(dbConnection, times(1)).getSession();
 		verify(paramsBuilder, times(1)).buildTempleParams(temple);
-		verify(insertStatementExecutor, times(1)).executeInsert(session,
+		verify(insertStatementExecutor, times(1)).executeInsert(temple.getId(), session,
 				QueryStrings.TEMPLE_INSERT_QUERY, paramsList);
 	}
 	
@@ -96,7 +96,7 @@ public class DataLoaderTest {
 		when(dbConnection.getSession()).thenReturn(session);
 		when(paramsBuilder.buildTempleParams(temple)).thenReturn(paramsList);
 		when(
-				insertStatementExecutor.executeInsert(session,
+				insertStatementExecutor.executeInsert(temple.getId(), session,
 						QueryStrings.TEMPLE_INSERT_QUERY, paramsList))
 				.thenReturn(false);
 
@@ -107,7 +107,7 @@ public class DataLoaderTest {
 		verify(context, times(1)).getBean(BeanConstants.PARAMS_BUILDER);
 		verify(dbConnection, times(1)).getSession();
 		verify(paramsBuilder, times(1)).buildTempleParams(temple);
-		verify(insertStatementExecutor, times(1)).executeInsert(session,
+		verify(insertStatementExecutor, times(1)).executeInsert(temple.getId(), session,
 				QueryStrings.TEMPLE_INSERT_QUERY, paramsList);
 	}
 

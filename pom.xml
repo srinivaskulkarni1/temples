@@ -24,7 +24,8 @@
 		<module>consume</module>
 		<module>query</module>
 		<module>ingest-client</module>
-    </modules>
+    <module>query-processor</module>
+  </modules>
 	
 	<build>
 		<plugins>
@@ -159,11 +160,15 @@
 			<artifactId>jersey-client</artifactId>
 			<version>${jersey.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>com.rabbitmq</groupId>
 			<artifactId>amqp-client</artifactId>
 			<version>3.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>14.0.1</version>
 		</dependency>		
 	</dependencies>
 </dependencyManagement>

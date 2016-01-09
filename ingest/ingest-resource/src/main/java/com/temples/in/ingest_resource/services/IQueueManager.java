@@ -8,6 +8,6 @@ import com.temples.in.data_model.wrapper.EntityType;
 public interface IQueueManager {
 
 	public abstract boolean enqueue(Action action, EntityType entity,
-			Map<String, String> pkList);
+			Map<String, Object> pkList);
 
 }

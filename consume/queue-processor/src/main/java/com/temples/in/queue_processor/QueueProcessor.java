@@ -51,10 +51,10 @@ public class QueueProcessor {
 			NUM_CONSUMERS = DEFAULT_CONSUMERS;
 		}
 		LOGGER.info("Configuration values are:");
-		LOGGER.info("queue.name | {}", QUEUE_NAME);
-		LOGGER.info("queue.host | {}", QUEUE_HOST);
-		LOGGER.info("queue.exchange | {}", EXCHANGE_NAME);
-		LOGGER.info("queue.consumers | {}", NUM_CONSUMERS);
+		LOGGER.info("queue.name={}", QUEUE_NAME);
+		LOGGER.info("queue.host={}", QUEUE_HOST);
+		LOGGER.info("queue.exchange={}", EXCHANGE_NAME);
+		LOGGER.info("queue.consumers={}", NUM_CONSUMERS);
 	}
 
 	public QueueProcessor() throws IOException, TimeoutException {
@@ -65,14 +65,14 @@ public class QueueProcessor {
 					BeanConstants.QUEUE_PROCSSOR_BEAN_FILE);
 		} catch (BeansException e) {
 			LOGGER.error(LogConstants.MARKER_FATAL,
-					"Failed to load conext | {}", e.getMessage());
+					"Failed to load conext | Exception Message={}", e.getMessage());
 		}
 		context.registerShutdownHook();
 
 		readProperties();
 
 		// Create a connection factory
-		LOGGER.info("Creating new ConnectionFactory on host {}", QUEUE_HOST);
+		LOGGER.info("Creating new ConnectionFactory | Host={}", QUEUE_HOST);
 		ConnectionFactory factory = new ConnectionFactory();
 
 		// hostname of your rabbitmq server
@@ -97,7 +97,7 @@ public class QueueProcessor {
 		for (int consumerId = 0; consumerId < NUM_CONSUMERS; consumerId++) {
 
 			LOGGER.debug(
-					"Creating consumer({}) with values | exchange({}) | queue({}) | routingKey({})",
+					"Creating Consumer({}) with values | exchange={} | queue={} | routingKey={}",
 					consumerId, EXCHANGE_NAME, QUEUE_NAME, INGEST_ROUTING_KEY);
 			try {
 				Channel channel = connection.createChannel();
@@ -112,7 +112,7 @@ public class QueueProcessor {
 				}
 			} catch (IOException e) {
 				LOGGER.error(
-						"IOException occured while creating consumer {}. Exception message is | {}",
+						"IOException occured while creating consumer {} | Exception Message={}",
 						consumerId, e.getLocalizedMessage());
 				continue;
 			}
@@ -135,7 +135,7 @@ public class QueueProcessor {
 				threadExecutor.submit(queueMessageConsumer);
 			} catch (RejectedExecutionException e) {
 				LOGGER.error(
-						"RejectedExecutionException occured while starting consumer {}. Exception message is | {}",
+						"RejectedExecutionException occured while starting consumer {} | Exception Message={}",
 						queueMessageConsumer.getId(), e.getLocalizedMessage());
 				continue;
 			}
@@ -155,21 +155,21 @@ public class QueueProcessor {
 			return consumer;
 		} catch (BeansException e) {
 			LOGGER.error(
-					"BeansException occured while creating consumer. Exception message is | {}",
-					e.getLocalizedMessage());
+					"BeansException occured while creating consumer {} | Exception Message={}",
+					id, e.getLocalizedMessage());
 			return null;
 		}
 	}
 
 	public static void main(String[] args) {
-		LOGGER.info("Starting consume process...");
+		LOGGER.info("****** STARTING CONSUME PROCESS ******");
 		QueueProcessor queueProcessor = null;
 		try {
 			queueProcessor = new QueueProcessor();
 		} catch (IOException e) {
 			LOGGER.error(
 					LogConstants.MARKER_FATAL,
-					"IOException occured while aquiring new connection on host {}. Exception message is | {}",
+					"IOException occured while aquiring new connection | Host={} | Exception Message={}",
 					Configuration.getProperty(Configuration.QUEUE_HOST),
 					e.getLocalizedMessage());
 			LOGGER.error(LogConstants.MARKER_FATAL,
@@ -178,7 +178,7 @@ public class QueueProcessor {
 		} catch (TimeoutException e) {
 			LOGGER.error(
 					LogConstants.MARKER_FATAL,
-					"TimeoutException occured while aquiring new connection on host {}. Exception message is | {}",
+					"TimeoutException occured while aquiring new connection | Host={} |Exception Message={}",
 					Configuration.getProperty(Configuration.QUEUE_HOST),
 					e.getLocalizedMessage());
 			LOGGER.error(LogConstants.MARKER_FATAL,
@@ -191,6 +191,7 @@ public class QueueProcessor {
 			System.exit(0);
 		}
 
+		LOGGER.info("****** CONSUME PROCESS STARTED SUCCESSFULLY ******");
 		System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 	}
 

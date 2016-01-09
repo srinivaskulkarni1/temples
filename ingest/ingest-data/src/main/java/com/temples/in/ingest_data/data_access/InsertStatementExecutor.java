@@ -21,11 +21,11 @@ public class InsertStatementExecutor implements IInsertStatementExecutor {
 	private static Logger LOGGER = LoggerFactory.getLogger(ParamsBuilder.class);
 
 	@Override
-	public boolean executeInsert(Session session, String queryString,
+	public boolean executeInsert(String id, Session session, String queryString,
 			List<Params> params) {
 
-		LOGGER.debug("Processing {}.executeInsert",
-				InsertStatementExecutor.class.getSimpleName());
+		LOGGER.debug("Processing | Id={} | {}.executeInsert",
+				id, InsertStatementExecutor.class.getSimpleName());
 
 		PreparedStatement statement;
 
@@ -43,7 +43,7 @@ public class InsertStatementExecutor implements IInsertStatementExecutor {
 							(String) param.getValue());
 				}
 			} catch (IllegalArgumentException e) {
-				LOGGER.error("Error applying parameter map. Insert operation aborted | {} "
+				LOGGER.error("Error applying parameter map. Insert operation aborted | Exception Mesasge={}"
 						+ e.getLocalizedMessage());
 				LOGGER.debug(
 						"IllegalArgumentException | Failed paramater | name={} | value={}",
@@ -51,7 +51,7 @@ public class InsertStatementExecutor implements IInsertStatementExecutor {
 				return false;
 
 			} catch (InvalidTypeException e) {
-				LOGGER.error("Error applying parameter map. Insert operation aborted | {} "
+				LOGGER.error("Error applying parameter map. Insert operation aborted | Exception Mesasge={}"
 						+ e.getLocalizedMessage());
 				LOGGER.debug(
 						"InvalidTypeException | Failed paramater | name={} | value={}",
@@ -66,39 +66,39 @@ public class InsertStatementExecutor implements IInsertStatementExecutor {
 		} catch (NoHostAvailableException e) {
 			return handleNoHostAvailableException(queryString, e);
 		} catch (QueryExecutionException e) {
-			LOGGER.error("Query triggered an execution exception. Insert operation aborted | {}"
+			LOGGER.error("Query triggered an execution exception. Insert operation aborted | Exception Mesasge={}"
 					+ e.getLocalizedMessage());
-			LOGGER.debug("QueryExecutionException | Failed Query: {}",
+			LOGGER.debug("QueryExecutionException | Failed Query={}",
 					queryString);
 			return false;
 
 		} catch (QueryValidationException e) {
-			LOGGER.error("Query syntax is invalid. Insert operation aborted | {}"
+			LOGGER.error("Query syntax is invalid. Insert operation aborted | Exception Mesasge={}"
 					+ e.getLocalizedMessage());
-			LOGGER.debug("QueryValidationException | Failed Query: {}",
+			LOGGER.debug("QueryValidationException | Failed Query={}",
 					queryString);
 			return false;
 
 		} catch (UnsupportedFeatureException e) {
-			LOGGER.error("Feature not supported has been used. Insert operation aborted | {}"
+			LOGGER.error("Feature not supported has been used. Insert operation aborted | Exception Mesasge={}"
 					+ e.getLocalizedMessage());
-			LOGGER.debug("UnsupportedFeatureException | Failed Query: {}",
+			LOGGER.debug("UnsupportedFeatureException | Failed Query={}",
 					queryString);
 			return false;
 
 		}
 
-		LOGGER.debug("Processed {}.executeInsert",
-				InsertStatementExecutor.class.getSimpleName());
+		LOGGER.debug("Processed | Id={} | {}.executeInsert",
+				id, InsertStatementExecutor.class.getSimpleName());
 
 		return true;
 	}
 
 	private boolean handleNoHostAvailableException(String queryString,
 			NoHostAvailableException e) {
-		LOGGER.error("No host in the cluster can be contacted successfully to execute this query. Insert operation aborted | {}"
+		LOGGER.error("No host in the cluster can be contacted successfully to execute this query. Insert operation aborted | Exception Mesasge={}"
 				+ e.getLocalizedMessage());
-		LOGGER.debug("NoHostAvailableException | Failed Query: {}", queryString);
+		LOGGER.debug("NoHostAvailableException | Failed Query={}", queryString);
 		return false;
 	}
 }

@@ -5,9 +5,10 @@ CREATE KEYSPACE temples WITH replication = {'class':'SimpleStrategy', 'replicati
 USE temples;
 
 CREATE TABLE temple(
+id VARCHAR,
 god VARCHAR,
-place varchar,
-district varchar,
-state varchar,
-PRIMARY KEY ((god, place))
+place VARCHAR,
+district VARCHAR,
+state VARCHAR,
+PRIMARY KEY ((id))
 ); 

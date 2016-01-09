@@ -10,4 +10,5 @@ public class BeanConstants {
 	public static final String PARAMS = "params";
 	public static final String PARAMS_BUILDER = "paramsbuilder";
 	public static final String QUEUE_MANAGER = "queuemanager";
+	public static final String ERROR_RESPONSE = "errorresponse";
 }

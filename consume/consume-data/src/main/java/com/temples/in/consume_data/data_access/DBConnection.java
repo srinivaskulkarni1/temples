@@ -22,7 +22,6 @@ import com.datastax.driver.core.policies.DCAwareRoundRobinPolicy;
 import com.datastax.driver.core.policies.DefaultRetryPolicy;
 import com.datastax.driver.core.policies.TokenAwarePolicy;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
-import com.datastax.driver.mapping.MappingManager;
 import com.temples.in.common_utils.Configuration;
 import com.temples.in.common_utils.LogConstants;
 import com.temples.in.consume_data.Params;
@@ -33,12 +32,12 @@ public class DBConnection implements IDBConnection {
 
 	private Cluster cluster;
 	private Session session;
-	private MappingManager manager;
 	private static Logger LOGGER = LoggerFactory.getLogger(DBConnection.class);
 	private final static Integer DEFAULT_MAX_RETRIES = 3;
 	private final static Integer DEFAULT_DELAY = 10;
 	private static int retryAttempts;
 	private static int retryDelay;
+	private static String dbHost;
 
 	static {
 
@@ -46,11 +45,7 @@ public class DBConnection implements IDBConnection {
 				.getProperty(Configuration.DB_CONNECT_RETRY_ATTEMPTS));
 		retryDelay = getRetryDelay(Configuration
 				.getProperty(Configuration.DB_CONNECT_RETRY_DELAY));
-	}
-
-	@Override
-	public MappingManager getManager() {
-		return manager;
+		dbHost = Configuration.getProperty(Configuration.DB_HOST);
 	}
 
 	@Override
@@ -61,7 +56,7 @@ public class DBConnection implements IDBConnection {
 			connect();
 			LOGGER.debug("Initialized {}.Session",
 					DBConnection.class.getSimpleName());
-			LOGGER.debug("Adding Prepared Statement TEMPLE_SELECT_ONE to cache...");
+			LOGGER.debug("Adding Prepared Statement to cache | Prepared Statement={}", QueryStrings.TEMPLE_SELECT_QUERY);
 			QueryStrings.addPreparedStatement(QueryStrings.TEMPLE_SELECT_ONE,
 					session.prepare(QueryStrings.TEMPLE_SELECT_QUERY));
 		}
@@ -77,11 +72,11 @@ public class DBConnection implements IDBConnection {
 		while (!isConnected && retryCount < retryAttempts) {
 			retryCount++;
 
-			LOGGER.info("Initializing database on host | {} | Keyspace | {}",
-					"localhost", DBConstants.KEYSPACE);
+			LOGGER.info("Database Initialization | Host={} | Keyspace={}",
+					dbHost, DBConstants.KEYSPACE);
 			cluster = Cluster
 					.builder()
-					.addContactPoint("localhost")
+					.addContactPoint(dbHost)
 					.withRetryPolicy(DefaultRetryPolicy.INSTANCE)
 					.withLoadBalancingPolicy(
 							new TokenAwarePolicy(new DCAwareRoundRobinPolicy()))
@@ -89,26 +84,25 @@ public class DBConnection implements IDBConnection {
 			try {
 				session = cluster.connect(DBConstants.KEYSPACE);
 				isConnected = true;
-				manager = new MappingManager(session);
 			} catch (NoHostAvailableException e) {
 				handleConnectionException(retryAttempts, retryCount);
 				LOGGER.debug(
-						"NoHostAvailableException thrown | Exception Message | {}",
+						"NoHostAvailableException thrown | Exception Message={}",
 						e.getLocalizedMessage());
 			} catch (AuthenticationException e) {
 				handleConnectionException(retryAttempts, retryCount);
 				LOGGER.debug(
-						"AuthenticationException thrown | Exception Message | {}",
+						"AuthenticationException thrown | Exception Message={}",
 						e.getLocalizedMessage());
 			} catch (InvalidQueryException e) {
 				handleConnectionException(retryAttempts, retryCount);
 				LOGGER.debug(
-						"InvalidQueryException thrown | Exception Message | {}",
+						"InvalidQueryException thrown | Exception Message={}",
 						e.getLocalizedMessage());
 			} catch (IllegalStateException e) {
 				handleConnectionException(retryAttempts, retryCount);
 				LOGGER.debug(
-						"IllegalStateException thrown | Exception Message | {}",
+						"IllegalStateException thrown | Exception Message={}",
 						e.getLocalizedMessage());
 			}
 
@@ -117,14 +111,14 @@ public class DBConnection implements IDBConnection {
 				try {
 					Thread.sleep(retryDelay);
 				} catch (InterruptedException e) {
-					LOGGER.warn("Retry failed | {}", e.getLocalizedMessage());
-				}
+					LOGGER.warn("Retry failed | Exception Message={}",
+							e.getLocalizedMessage());				}
 			}
 		}
 
 		if (isConnected) {
-			LOGGER.info("Connected to cluster on host | {} | Keyspace | {}",
-					"localhost", DBConstants.KEYSPACE);
+			LOGGER.info("Connected to cluster | Host={} | Keyspace={}", dbHost,
+					DBConstants.KEYSPACE);
 		}
 
 	}
@@ -136,8 +130,8 @@ public class DBConnection implements IDBConnection {
 				retryAttempts = Integer.parseInt(numRetries);
 			} catch (NumberFormatException e) {
 				LOGGER.warn(
-						"Invalid property value | {} | for property | {} | expected integer value | defaulting to MAX_RETRIES (3)",
-						numRetries, Configuration.DB_CONNECT_RETRY_ATTEMPTS);
+						"Invalid property value | {}={} | expected integer value | defaulting to MAX_RETRIES (3)",
+						Configuration.DB_CONNECT_RETRY_ATTEMPTS, numRetries);
 			}
 		} else {
 			LOGGER.warn(
@@ -154,8 +148,8 @@ public class DBConnection implements IDBConnection {
 				delay = Integer.parseInt(retryInSecs);
 			} catch (NumberFormatException e) {
 				LOGGER.warn(
-						"Invalid property value | {} | for property | {} | expected integer value | Defaulting to DEFAULT_RETRY_DELAY of 10 milliseconds",
-						retryInSecs, Configuration.DB_CONNECT_RETRY_DELAY);
+						"Invalid property value | {}={} | expected integer value | Defaulting to DEFAULT_RETRY_DELAY of 10 milliseconds",
+						Configuration.DB_CONNECT_RETRY_DELAY, retryInSecs);
 			}
 		} else {
 			LOGGER.warn(
@@ -172,18 +166,18 @@ public class DBConnection implements IDBConnection {
 					retryDelay);
 		} else {
 			LOGGER.error(LogConstants.MARKER_FATAL,
-					"Database connection failed. application will exit");
+					"Database connection failed. application will now exit...");
 			System.exit(0);
 		}
 	}
 
 	public ResultSet getAll(String tableName) {
-		LOGGER.info("Processing {}.getAll | table | {}",
+		LOGGER.debug("Processing {}.getAll | table={}",
 				DBConnection.class.getSimpleName(), tableName);
 		Statement select = QueryBuilder.select().all().from(tableName);
 		ResultSet rs;
 		rs = getSession().execute(select);
-		LOGGER.info("Processed {}.getAll | table | {}",
+		LOGGER.info("Processed {}.getAll | table={}",
 				DBConnection.class.getSimpleName(), tableName);
 		return rs;
 
@@ -191,9 +185,9 @@ public class DBConnection implements IDBConnection {
 
 	public ResultSet getOne(String statementId, String queryString,
 			List<Params> params) {
-		LOGGER.debug("Processing {}.getOne | Query String | {}",
+		LOGGER.debug("Processing {}.getOne | Query String={}",
 				DBConnection.class.getSimpleName(), queryString);
-
+		
 		ResultSet rs = null;
 		Session sessionObj = getSession();
 
@@ -202,7 +196,7 @@ public class DBConnection implements IDBConnection {
 
 		if (statement == null) {
 			try {
-				LOGGER.debug("Prepared statement {} not found in cache. Creating a new one");
+				LOGGER.debug("Prepared statement not found in cache. Creating a new one");
 				statement = sessionObj.prepare(queryString);
 				QueryStrings.addPreparedStatement(statementId, statement);
 			} catch (NoHostAvailableException e) {
@@ -226,58 +220,59 @@ public class DBConnection implements IDBConnection {
 					boundEntries.append(name + "=" + value + "|");
 				}
 			} catch (IllegalArgumentException e) {
-				LOGGER.error("Error applying parameter map. SELECT operation aborted | {} "
+				LOGGER.error("Error applying parameter map. SELECT operation aborted | Exception Message={}"
 						+ e.getLocalizedMessage());
 				LOGGER.debug(
-						"IllegalArgumentException | Failed paramater | name={} | value={}",
+						"IllegalArgumentException | Failed Paramater (name={}, value={})",
 						name, value);
 				return null;
 
 			} catch (InvalidTypeException e) {
-				LOGGER.error("Error applying parameter map. SELECT operation aborted | {} "
+				LOGGER.error("Error applying parameter map. SELECT operation aborted | Exception Message={}"
 						+ e.getLocalizedMessage());
 				LOGGER.debug(
-						"InvalidTypeException | Failed paramater | name={} | value={}",
+						"InvalidTypeException | Failed Paramater (name={}, value={})",
 						name, value);
 				return null;
 
 			}
 		}
 
-		LOGGER.debug("PREDICATE for SELECT statement |{}",
+		LOGGER.debug("PREDICATE for SELECT statement={}",
 				boundEntries.toString());
 		boundEntries = null;
 
 		try {
-			LOGGER.debug("Execute SELECT statement...");
+			LOGGER.info("Querying for data...");
 			rs = sessionObj.execute(boundStatement);
+			LOGGER.info("Query executed successfully...");
 		} catch (NoHostAvailableException e) {
 			handleNoHostAvailableException(queryString, e);
 			return null;
 		} catch (QueryExecutionException e) {
-			LOGGER.error("Query triggered an execution exception. SELECT operation aborted | {}"
+			LOGGER.error("Query triggered an execution exception. SELECT operation aborted | Exception Message={}"
 					+ e.getLocalizedMessage());
-			LOGGER.debug("QueryExecutionException | Failed Query: {}",
+			LOGGER.debug("QueryExecutionException | Failed Query={}",
 					queryString);
 			return null;
 
 		} catch (QueryValidationException e) {
-			LOGGER.error("Query syntax is invalid. Insert operation aborted | {}"
+			LOGGER.error("Query syntax is invalid. SELECT operation aborted | Exception Message={}"
 					+ e.getLocalizedMessage());
-			LOGGER.debug("QueryValidationException | Failed Query: {}",
+			LOGGER.debug("QueryValidationException | Failed Query={}",
 					queryString);
 			return null;
 
 		} catch (UnsupportedFeatureException e) {
-			LOGGER.error("Feature not supported has been used. Insert operation aborted | {}"
+			LOGGER.error("Feature not supported has been used. SELECT operation aborted | Exception Message={}"
 					+ e.getLocalizedMessage());
-			LOGGER.debug("UnsupportedFeatureException | Failed Query: {}",
+			LOGGER.debug("UnsupportedFeatureException | Failed Query={}",
 					queryString);
 			return null;
 
 		}
 
-		LOGGER.debug("Processed {}.getOne | Query String | {}",
+		LOGGER.debug("Processed {}.getOne | Query String={}",
 				DBConnection.class.getSimpleName(), queryString);
 		return rs;
 

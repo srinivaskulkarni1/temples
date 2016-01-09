@@ -9,7 +9,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
@@ -38,7 +37,7 @@ public class TempleResource {
 					BeanConstants.INGEST_RESOURCE_BEAN_FILE);
 		} catch (BeansException e) {
 			LOGGER.error(LogConstants.MARKER_FATAL,
-					"Failed to load conext | {}", e.getMessage());
+					"Failed to load conext | Exception Message={}", e.getMessage());
 		}
 		context.registerShutdownHook();
 		LOGGER.debug("Initialized | {}", TempleResource.class.getName());
@@ -61,27 +60,33 @@ public class TempleResource {
 			@Context SecurityContext securityContext) {
 
 		String incomingIP = requestContext.getRemoteAddr();
-		String place = temple.getPlace();
-		String god = temple.getGod();
-
-		URI uri = uriInfo.getAbsolutePathBuilder().path(place + "/" + god)
-				.build();
+		URI requestURI = uriInfo.getRequestUri();
+		String id = IDGen.getCompressedUuid(true);
 
 		LOGGER.info(
-				"Processing | POST | addTemple | Parameters | {},{} | Remote Host | {}",
-				place, god, incomingIP);
+				"Processing | Id={} | Request Method=POST | URI={} | Remote Host={}",
+				id, requestURI, incomingIP);
 		ITempleService templeService = (ITempleService) context
 				.getBean(BeanConstants.TEMPLE_SERVICE);
 
+		temple.setId(id);
 		Temple newTemple = templeService.addTemple(temple);
 		LOGGER.info(
-				"Processed | POST | addTemple | Parameters | {},{} | Remote Host | {}",
-				place, god, incomingIP);
+				"Processed | Id={} | Request Method=POST | URI={} | Remote Host={}",
+				id, requestURI, incomingIP);
 
 		if (newTemple == null) {
-			return Response.serverError().status(Status.INTERNAL_SERVER_ERROR)
+			ErrorResponse errorResponse = (ErrorResponse) context.getBean(BeanConstants.ERROR_RESPONSE);
+			errorResponse.setErrorCode("500");
+			errorResponse.setErrorMessage("Internal exception. Please check log for details");
+			errorResponse.setEntity(temple.getClass().getSimpleName());
+			errorResponse.setEntityId(id);
+			return Response.serverError().entity(errorResponse)
 					.build();
 		}
+		
+		URI uri = uriInfo.getAbsolutePathBuilder().path(newTemple.getId())
+				.build();
 
 		return Response.created(uri).entity(newTemple).build();
 

@@ -4,13 +4,13 @@ import java.util.Map;
 
 public class PrimaryKey {
 
-	private Map<String, String> primaryKeys;
+	private Map<String, Object> primaryKeys;
 
-	public Map<String, String> getPrimaryKeys() {
+	public Map<String, Object> getPrimaryKeys() {
 		return primaryKeys;
 	}
 
-	public void setPrimaryKeys(Map<String, String> primaryKeys) {
+	public void setPrimaryKeys(Map<String, Object> primaryKeys) {
 		this.primaryKeys = primaryKeys;
 	}
 

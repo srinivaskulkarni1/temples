@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.AbstractApplicationContext;
 
+import com.datastax.driver.core.Session;
 import com.temples.in.data_model.Temple;
 import com.temples.in.ingest_data.data_access.IDBConnection;
 import com.temples.in.ingest_data.data_access.IInsertStatementExecutor;
@@ -20,18 +21,27 @@ public class DataLoader implements ApplicationContextAware, IDataLoader {
 
 	@Override
 	public Temple addTemple(Temple temple) {
-		LOGGER.debug("Processing {}.addTemple",
-				DataLoader.class.getSimpleName());
+		LOGGER.debug("Processing | Id={} | {}.addTemple",
+				temple.getId(), DataLoader.class.getSimpleName());
 
 		IDBConnection dbConnection = getDBConnection();
 		IInsertStatementExecutor insertStatementExecutor = getInsertStatementExecutor();
 		IParamsBulder paramsBuilder = getParamsBuilder();
 
-		boolean bInserted = insertStatementExecutor.executeInsert(
-				dbConnection.getSession(), QueryStrings.TEMPLE_INSERT_QUERY,
+		Session session = dbConnection.getSession();
+		
+		LOGGER.info("Creating new entity | Id={}",
+				temple.getId());		
+
+		boolean bInserted = insertStatementExecutor.executeInsert(temple.getId(),
+				session, QueryStrings.TEMPLE_INSERT_QUERY,
 				paramsBuilder.buildTempleParams(temple));
 
-		LOGGER.debug("Processed {}.addTemple", DataLoader.class.getSimpleName());
+		LOGGER.info("New entity created successfully | Id={}",
+				temple.getId());
+		
+		LOGGER.debug("Processed | Id={} | {}.addTemple",
+				temple.getId(), DataLoader.class.getSimpleName());
 
 		if (!bInserted) {
 			return null;

@@ -1,4 +1,4 @@
-package com.temples.in.data_model;
+package com.temples.in.data_model.util;
 
 public class DataModelBeanConstants {
 

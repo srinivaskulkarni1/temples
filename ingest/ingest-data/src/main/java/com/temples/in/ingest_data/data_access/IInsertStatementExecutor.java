@@ -7,7 +7,7 @@ import com.temples.in.ingest_data.Params;
 
 public interface IInsertStatementExecutor {
 
-	public abstract boolean executeInsert(Session session, String queryString,
+	public abstract boolean executeInsert(String id, Session session, String queryString,
 			List<Params> params);
 
 }

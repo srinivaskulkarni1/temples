@@ -17,7 +17,8 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.MessageProperties;
 import com.temples.in.common_utils.Configuration;
-import com.temples.in.data_model.DataModelBeanConstants;
+import com.temples.in.data_model.table_info.DBConstants;
+import com.temples.in.data_model.util.DataModelBeanConstants;
 import com.temples.in.data_model.wrapper.Action;
 import com.temples.in.data_model.wrapper.EntityType;
 import com.temples.in.data_model.wrapper.EntityInfo;
@@ -52,35 +53,39 @@ public class QueueManager implements ApplicationContextAware, IQueueManager {
 	}
 
 	private static void connect() {
-		LOGGER.info("Conntecting to message queue on host {}", QUEUE_HOST);
+		LOGGER.info("Connecting to message queue | Host={}", QUEUE_HOST);
 		try {
 			connection = factory.newConnection();
 		} catch (IOException e) {
 			LOGGER.error(
-					"Cannot open connection to message queue on host {}. Error message | {} ",
+					"Cannot open connection to message queue | Host={} | Error Message={} ",
 					QUEUE_HOST, e.getLocalizedMessage());
 		} catch (TimeoutException e) {
 			LOGGER.error(
-					"Timeout exception while connection to message queue on host {}. Error message | {} ",
+					"Timeout exception while connection to message queue | Host={} | Error Message={} ",
 					QUEUE_HOST, e.getLocalizedMessage());
 		}
 	}
 
-	public boolean putQueueMessage(String message) {
+	public boolean putQueueMessage(String id, String message) {
 		
-		LOGGER.debug("Processing {}.putQueueMessage",
-				QueueManager.class.getSimpleName());
-		LOGGER.info("Posting queue message | {}", message);
+		LOGGER.debug("Processing | Id={} | queueMessage={} | {}.putQueueMessage",
+				id, message, QueueManager.class.getSimpleName());
 		
 		try {
 		
+			if(connection == null){
+				connect();
+			}
 			Channel channel = connection.createChannel();
 			channel.exchangeDeclare(EXCHANGE_NAME, "direct", true);
 			channel.queueDeclare(QUEUE_NAME, true, false, false, null);
 			
 			//sends message to exchange instead of queue. queues need to listen to exchange to receive the message.
+			LOGGER.info("Posting queue message | Id={}", id);
 			channel.basicPublish(EXCHANGE_NAME, INGEST_ROUTING_KEY, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
 			channel.close();
+			LOGGER.info("Queue message posted successfully | Id={}", id);			
 		} catch (IOException e) {
 			LOGGER.error("Error posting queue message. Error message | {} ",  e.getLocalizedMessage());
 			LOGGER.debug("IOException while posting queue message on host {}",
@@ -94,15 +99,14 @@ public class QueueManager implements ApplicationContextAware, IQueueManager {
 			return false;
 		}
 
-		LOGGER.debug("Processed {}.putQueueMessage",
-				QueueManager.class.getSimpleName());
-
+		LOGGER.debug("Processed | Id={} | queueMessage={} | {}.putQueueMessage",
+				id, message, QueueManager.class.getSimpleName());
 		return true;
 	}
 
 	
 	private String getQueueMessage(Action action, EntityType entity,
-			Map<String, String> pkList){
+			Map<String, Object> pkList){
 	
 		PrimaryKey primaryKey = (PrimaryKey) context.getBean(DataModelBeanConstants.PRIMARY_KEY);
 		primaryKey.setPrimaryKeys(pkList);
@@ -125,13 +129,13 @@ public class QueueManager implements ApplicationContextAware, IQueueManager {
 
 	@Override
 	public boolean enqueue(Action action, EntityType entity,
-			Map<String, String> pkList) {
-		LOGGER.debug("Processing {}.enqueue",
-				QueueManager.class.getSimpleName());
+			Map<String, Object> pkList) {
+		LOGGER.debug("Processing | Id={} | {}.enqueue",
+				pkList.get(DBConstants.ID).toString(), QueueManager.class.getSimpleName());
 		String queueMessage = getQueueMessage(action, entity, pkList);
-		boolean bSuccess = putQueueMessage(queueMessage);
-		LOGGER.debug("Processed {}.enqueue",
-				QueueManager.class.getSimpleName());
+		boolean bSuccess = putQueueMessage(pkList.get(DBConstants.ID).toString(), queueMessage);
+		LOGGER.debug("Processed | Id={} | {}.enqueue",
+				pkList.get(DBConstants.ID).toString(), QueueManager.class.getSimpleName());
 		return bSuccess;		
 	}
 }

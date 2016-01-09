@@ -21,15 +21,15 @@ public class ParamsBuilder implements ApplicationContextAware, IParamsBulder {
 	private static Logger LOGGER = LoggerFactory.getLogger(ParamsBuilder.class);
 
 	@Override
-	public List<Params> build(PrimaryKey primaryKey) {
+	public List<Params> build(int consumerId, String entityId, PrimaryKey primaryKey) {
 
-		LOGGER.debug("Processing {}.build",
+		LOGGER.debug("Consumer({}) | Entity Id={} | Processing {}.getTemple", consumerId, entityId,
 				ParamsBuilder.class.getSimpleName());
 
-		Map<String, String> pkList = primaryKey.getPrimaryKeys();
+		Map<String, Object> pkList = primaryKey.getPrimaryKeys();
 		List<Params> paramsList = new ArrayList<Params>();
 		
-		for (Map.Entry<String, String> entry : pkList.entrySet())
+		for (Map.Entry<String, Object> entry : pkList.entrySet())
 		{
 			Params params = (Params) context.getBean(BeanConstants.PARAMS);
 			params.setType(entry.getValue().getClass());
@@ -39,7 +39,7 @@ public class ParamsBuilder implements ApplicationContextAware, IParamsBulder {
 
 		}
 		
-		LOGGER.debug("Processed {}.build",
+		LOGGER.debug("Consumer({}) | Entity Id={} | Processed {}.getTemple", consumerId, entityId,
 				ParamsBuilder.class.getSimpleName());
 
 		return paramsList;

@@ -15,7 +15,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.AbstractApplicationContext;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.temples.in.consume_data.ITempleDataLoader;
 import com.temples.in.consume_util.BeanConstants;
 import com.temples.in.data_model.Temple;
@@ -33,23 +32,17 @@ public class MessageProcessor implements ApplicationContextAware {
 	public MessageProcessor() {
 	}
 
-	public boolean process(int consumerId, String message) throws Exception {
-		LOGGER.info("Consumer{}: processing message | {}", consumerId, message);
-		Gson gson = new Gson();
-		EntityInfo entityInfo = null;
-		boolean bProcessed = false;
+	public boolean process(int consumerId, String entityId, EntityInfo entityInfo) throws Exception {
 
-		try {
-			entityInfo = gson.fromJson(message, EntityInfo.class);
-		} catch (JsonSyntaxException e) {
-			LOGGER.error("Consumer{}: Invalid message format | {}", consumerId,
-					message);
-			throw e;
-		}
+		LOGGER.debug("Consumer({}) | Entity Id={} | Processing {}.process", consumerId, entityId,
+				MessageProcessor.class.getSimpleName());
+
+		LOGGER.info("Consumer({}) | Entity Id={} | Processing entity", consumerId, entityId);
+		boolean bProcessed = false;
 
 		if (entityInfo != null) {
 			if (entityInfo.getAction().equals(Action.PUT)) {
-				bProcessed = handlePUTRequest(consumerId, entityInfo);
+				bProcessed = handlePUTRequest(consumerId, entityId, entityInfo);
 			} else if (entityInfo.getAction().equals(Action.POST)) {
 				throw new Exception("POST request not implemented!!!");
 			} else if (entityInfo.getAction().equals(Action.DELETE)) {
@@ -57,13 +50,16 @@ public class MessageProcessor implements ApplicationContextAware {
 			}
 		}
 
+		LOGGER.debug("Consumer({}) | Entity Id={} | Processed {}.process", consumerId, entityId,
+				MessageProcessor.class.getSimpleName());
+
 		return bProcessed;
 
 	}
 
-	private boolean handlePUTRequest(int consumerId, EntityInfo entityInfo)
+	private boolean handlePUTRequest(int consumerId, String entityId, EntityInfo entityInfo)
 			throws Exception {
-		LOGGER.debug("Consumer{}: Processing {}.handlePUTRequest", consumerId,
+		LOGGER.debug("Consumer({}) | Entity Id={} | Processing {}.handlePUTRequest", consumerId, entityId,
 				MessageProcessor.class.getSimpleName());
 
 		if (entityInfo.getEntityType().equals(EntityType.TEMPLE)) {
@@ -72,39 +68,41 @@ public class MessageProcessor implements ApplicationContextAware {
 						.getBean(BeanConstants.TEMPLE_DATA_LOADER);
 			} catch (BeansException e) {
 				LOGGER.error(
-						"Consumer{}: BeansException while processing queue message",
-						consumerId);
-				LOGGER.debug("Consumer{}: Exception message | {}", consumerId,
-						e.getLocalizedMessage());
+						"Consumer({}) | Entity Id={} | BeansException while processing queue message | Exception Message={}",
+						consumerId, entityId, e.getLocalizedMessage());
 				return false;
 			}
 
 			if (dataLoader != null) {
 				if (entityInfo.getEntityType().equals(EntityType.TEMPLE)) {
-					Temple temple = dataLoader.getTemple(entityInfo
+					Temple temple = dataLoader.getTemple(consumerId, entityInfo
 							.getPrimaryKey());
 					if (temple != null) {
-						postDataToSearcher(consumerId, temple);
+						postDataToSearcher(consumerId, entityId, temple);
 					}
 				}
 			}
 		}
-		LOGGER.debug("Consumer{}: Processed {}.handlePUTRequest", consumerId,
+		LOGGER.debug("Consumer({}) | Entity Id={} | Processed {}.handlePUTRequest", consumerId, entityId,
 				MessageProcessor.class.getSimpleName());
 		return true;
 	}
 
-	private void postDataToSearcher(int consumerId, Temple temple) throws RuntimeException {
-		LOGGER.debug("Consumer{}: Processing {}.postDataToSearcher",
-				consumerId, MessageProcessor.class.getSimpleName());
+	private void postDataToSearcher(int consumerId, String entityId, Temple temple) throws RuntimeException {
+
+		LOGGER.debug("Consumer({}) | Entity Id={} | Processing {}.postDataToSearcher", consumerId, entityId,
+				MessageProcessor.class.getSimpleName());
 
 		Gson gson = new Gson();
 		String templeJson = gson.toJson(temple);
 		// to be moved to config
 		String requestURL = "http://localhost:9200/temples/temple";
 
-		LOGGER.info("Consumer{}: Posting data to searcher | URL | {} | message | {}", consumerId,
-				requestURL, templeJson);
+		LOGGER.info("Consumer({}) | Entity Id={} | Posting data to searcher", consumerId,
+				entityId);
+		
+		LOGGER.debug("Consumer({}) | Entity Id={} | Posting data to searcher | URL={} | Message={}", consumerId,
+				entityId, requestURL, templeJson);
 
 		Client client = ClientBuilder.newClient();
 		WebTarget webTarget = client.target(requestURL);
@@ -112,11 +110,13 @@ public class MessageProcessor implements ApplicationContextAware {
 		Response response = invocationBuilder.post(Entity.json(templeJson));
 				
 		if (response.getStatus() != 201) {
-			throw new RuntimeException("Consumer{" + consumerId + "}: Failed to post data to searcher | HTTP ERROR CODE : "
+			throw new RuntimeException("Consumer(" + consumerId + ") | Entity Id=" + entityId + "Failed to post data to searcher | HTTP ERROR CODE : "
 					+ response.getStatus());
 		}
 
-		LOGGER.debug("Consumer{}: Processed {}.postDataToSearcher", consumerId,
+		LOGGER.info("Consumer({}) | Entity Id={} | Successfully posted data to searcher", consumerId,
+				entityId);
+		LOGGER.debug("Consumer({}) | Entity Id={} | Processed {}.postDataToSearcher", consumerId, entityId,
 				MessageProcessor.class.getSimpleName());
 	}
 

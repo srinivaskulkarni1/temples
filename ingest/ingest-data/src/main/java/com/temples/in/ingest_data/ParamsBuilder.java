@@ -11,7 +11,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.AbstractApplicationContext;
 
 import com.temples.in.data_model.Temple;
+import com.temples.in.data_model.table_info.DBConstants;
 import com.temples.in.ingest_util.BeanConstants;
+import com.temples.in.ingest_util.NullPrimaryKeyException;
 
 public class ParamsBuilder implements ApplicationContextAware, IParamsBulder {
 
@@ -22,11 +24,21 @@ public class ParamsBuilder implements ApplicationContextAware, IParamsBulder {
 	@Override
 	public List<Params> buildTempleParams(Temple temple) {
 
-		LOGGER.debug("Processing {}.buildTempleParams",
-				ParamsBuilder.class.getSimpleName());
+		LOGGER.debug("Processing | Id={} | {}.buildTempleParams",
+				temple.getId(), ParamsBuilder.class.getSimpleName());
 
 		List<Params> paramsList = new ArrayList<Params>();
-
+		
+		if (temple.getId() != null) {
+			Params params0 = (Params) context.getBean(BeanConstants.PARAMS);
+			params0.setType(temple.getId().getClass());
+			params0.setName(DBConstants.ID);
+			params0.setValue(temple.getId());
+			paramsList.add(params0);
+		}else{
+			throw new NullPrimaryKeyException("Id cannot be null");
+		}
+		
 		String god = temple.getGod();
 		if (god != null) {
 			Params params1 = (Params) context.getBean(BeanConstants.PARAMS);
@@ -63,8 +75,8 @@ public class ParamsBuilder implements ApplicationContextAware, IParamsBulder {
 			paramsList.add(params4);
 		}
 
-		LOGGER.debug("Processed {}.buildTempleParams",
-				ParamsBuilder.class.getSimpleName());
+		LOGGER.debug("Processed | Id={} | {}.buildTempleParams",
+				temple.getId(), ParamsBuilder.class.getSimpleName());
 
 		return paramsList;
 	}

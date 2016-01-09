@@ -2,7 +2,7 @@ package com.temples.in.data_model;
 
 import com.google.common.base.Objects;
 
-public class Temple {
+public class Temple extends BaseEntity {
 	
 	private String god;
 	private String place;
@@ -10,6 +10,7 @@ public class Temple {
 	private String district;
 
 	public Temple() {
+		super();
 	}
 	
 	public Temple(String god, String place, String state, String district) {
@@ -54,14 +55,13 @@ public class Temple {
 	public boolean equals(Object obj) {
         if (obj instanceof Temple) {
         	Temple that = (Temple) obj;
-            return Objects.equal(this.god, that.god) &&
-                   Objects.equal(this.place, that.place);
+            return Objects.equal(this.getId(), that.getId());
         }
         return false;
 	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(god, place);
+		return Objects.hashCode(getId());
 	}
 }

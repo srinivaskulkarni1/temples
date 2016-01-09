@@ -9,13 +9,13 @@ import com.temples.in.data_model.table_info.DBConstants;
 public class QueryStrings {
 
 	public static final String TEMPLE_SELECT_QUERY = "SELECT" + " "
+			+ DBConstants.ID + ","
 			+ DBConstants.TABLE_TEMPLE_GOD + ","
 			+ DBConstants.TABLE_TEMPLE_PLACE + ","
 			+ DBConstants.TABLE_TEMPLE_DISTRICT + ","
 			+ DBConstants.TABLE_TEMPLE_STATE + " " + "FROM" + " "
 			+ DBConstants.TABLE_TEMPLE + " " + "WHERE" + " "
-			+ DBConstants.TABLE_TEMPLE_GOD + "=" + "?" + " " + "AND" + " "
-			+ DBConstants.TABLE_TEMPLE_PLACE + "=" + "?" + ";";
+			+ DBConstants.ID + "=" + "?" + ";";
 
 	public static final String TEMPLE_SELECT_ONE = "TEMPLE_SELECT_ONE";
 

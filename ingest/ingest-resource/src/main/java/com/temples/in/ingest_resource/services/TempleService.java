@@ -11,9 +11,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.AbstractApplicationContext;
 
 import com.temples.in.data_model.Temple;
+import com.temples.in.data_model.table_info.DBConstants;
 import com.temples.in.data_model.wrapper.Action;
 import com.temples.in.data_model.wrapper.EntityType;
-import com.temples.in.ingest_data.DBConstants;
 import com.temples.in.ingest_data.IDataLoader;
 import com.temples.in.ingest_util.BeanConstants;
 
@@ -25,16 +25,14 @@ public class TempleService implements ApplicationContextAware, ITempleService {
 	
 	@Override
 	public Temple addTemple(Temple temple) {
-		LOGGER.debug("Processing {}.addTemple", TempleService.class.getSimpleName());
+		LOGGER.debug("Processing | Id={} | {}.addTemple", temple.getId(), TempleService.class.getSimpleName());
 
 		IDataLoader dataLoader = (IDataLoader) context.getBean(BeanConstants.DATA_LOADER);
 		Temple newTemple = dataLoader.addTemple(temple);
 
-
 		if (newTemple != null) {
-			Map<String, String> pkList = new HashMap<String, String>();
-			pkList.put(DBConstants.TABLE_TEMPLE_GOD, newTemple.getGod());
-			pkList.put(DBConstants.TABLE_TEMPLE_PLACE, newTemple.getPlace());
+			Map<String, Object> pkList = new HashMap<String, Object>();
+			pkList.put(DBConstants.ID, newTemple.getId());
 
 			IQueueManager queueManager = (IQueueManager) context
 					.getBean(BeanConstants.QUEUE_MANAGER);
@@ -46,7 +44,7 @@ public class TempleService implements ApplicationContextAware, ITempleService {
 			}
 		}
 		
-		LOGGER.debug("Processed {}.addTemple", TempleService.class.getSimpleName());
+		LOGGER.debug("Processed | Id={} | {}.addTemple", temple.getId(), TempleService.class.getSimpleName());
 		return newTemple;
 	}
 

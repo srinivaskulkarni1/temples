@@ -35,7 +35,12 @@
 			<groupId>com.temples.in</groupId>
 			<artifactId>query-util</artifactId>
 			<version>${project.version}</version>
-		</dependency>		
+		</dependency>
+		<dependency>
+			<groupId>com.temples.in</groupId>
+			<artifactId>query-processor	</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<!-- Jersey dependencies for REST -->
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
