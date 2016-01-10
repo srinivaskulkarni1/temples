@@ -33,6 +33,13 @@ public class TempleService implements ApplicationContextAware, ITempleService {
 
 	@Override
 	public Temple getTemple(String id) {
+		LOGGER.debug("Processing {}.getTemple", TempleService.class.getSimpleName());
+
+		esQueryProcessor = (ESQueryProcessor) context.getBean(BeanConstants.ES_QUERY_PROCESSOR);
+
+		//Temple temple = esQueryProcessor.getOne(Resources.TEMPLES, Temple.class);
+		LOGGER.debug("Processed {}.getTemple", TempleService.class.getSimpleName());
+
 		return null;
 	}
 
