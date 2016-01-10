@@ -8,6 +8,6 @@ public interface ITempleService {
 
 	public abstract List<Temple> getTemples();
 	
-	public abstract Temple getTemple(String place, String god);
+	public abstract Temple getTemple(String id);
 
 }

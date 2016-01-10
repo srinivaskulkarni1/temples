@@ -22,7 +22,7 @@ public class IngestClient {
 			context.registerShutdownHook();
 		} catch (BeansException e) {
 			LOGGER.error(LogConstants.MARKER_FATAL,
-					"Failed to load conext | {}", e.getMessage());
+					"Failed to load context | {}", e.getMessage());
 		}
 		LOGGER.info("START - Process csv file and POST requests");
 

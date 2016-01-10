@@ -69,7 +69,7 @@ public class QueueManager implements ApplicationContextAware, IQueueManager {
 
 	public boolean putQueueMessage(String id, String message) {
 		
-		LOGGER.debug("Processing | Id={} | queueMessage={} | {}.putQueueMessage",
+		LOGGER.debug("Processing | Entity Id={} | queueMessage={} | {}.putQueueMessage",
 				id, message, QueueManager.class.getSimpleName());
 		
 		try {
@@ -82,10 +82,10 @@ public class QueueManager implements ApplicationContextAware, IQueueManager {
 			channel.queueDeclare(QUEUE_NAME, true, false, false, null);
 			
 			//sends message to exchange instead of queue. queues need to listen to exchange to receive the message.
-			LOGGER.info("Posting queue message | Id={}", id);
+			LOGGER.info("Posting queue message | Entity Id={}", id);
 			channel.basicPublish(EXCHANGE_NAME, INGEST_ROUTING_KEY, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
 			channel.close();
-			LOGGER.info("Queue message posted successfully | Id={}", id);			
+			LOGGER.info("Queue message posted successfully | Entity Id={}", id);			
 		} catch (IOException e) {
 			LOGGER.error("Error posting queue message. Error message | {} ",  e.getLocalizedMessage());
 			LOGGER.debug("IOException while posting queue message on host {}",
@@ -99,7 +99,7 @@ public class QueueManager implements ApplicationContextAware, IQueueManager {
 			return false;
 		}
 
-		LOGGER.debug("Processed | Id={} | queueMessage={} | {}.putQueueMessage",
+		LOGGER.debug("Processed | Entity Id={} | queueMessage={} | {}.putQueueMessage",
 				id, message, QueueManager.class.getSimpleName());
 		return true;
 	}
@@ -130,11 +130,11 @@ public class QueueManager implements ApplicationContextAware, IQueueManager {
 	@Override
 	public boolean enqueue(Action action, EntityType entity,
 			Map<String, Object> pkList) {
-		LOGGER.debug("Processing | Id={} | {}.enqueue",
+		LOGGER.debug("Processing | Entity Id={} | {}.enqueue",
 				pkList.get(DBConstants.ID).toString(), QueueManager.class.getSimpleName());
 		String queueMessage = getQueueMessage(action, entity, pkList);
 		boolean bSuccess = putQueueMessage(pkList.get(DBConstants.ID).toString(), queueMessage);
-		LOGGER.debug("Processed | Id={} | {}.enqueue",
+		LOGGER.debug("Processed | Entity Id={} | {}.enqueue",
 				pkList.get(DBConstants.ID).toString(), QueueManager.class.getSimpleName());
 		return bSuccess;		
 	}

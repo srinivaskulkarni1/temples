@@ -24,7 +24,7 @@ public class ParamsBuilder implements ApplicationContextAware, IParamsBulder {
 	@Override
 	public List<Params> buildTempleParams(Temple temple) {
 
-		LOGGER.debug("Processing | Id={} | {}.buildTempleParams",
+		LOGGER.debug("Processing | Entity Id={} | {}.buildTempleParams",
 				temple.getId(), ParamsBuilder.class.getSimpleName());
 
 		List<Params> paramsList = new ArrayList<Params>();
@@ -75,7 +75,7 @@ public class ParamsBuilder implements ApplicationContextAware, IParamsBulder {
 			paramsList.add(params4);
 		}
 
-		LOGGER.debug("Processed | Id={} | {}.buildTempleParams",
+		LOGGER.debug("Processed | Entity Id={} | {}.buildTempleParams",
 				temple.getId(), ParamsBuilder.class.getSimpleName());
 
 		return paramsList;

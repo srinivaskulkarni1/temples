@@ -24,7 +24,7 @@ public class InsertStatementExecutor implements IInsertStatementExecutor {
 	public boolean executeInsert(String id, Session session, String queryString,
 			List<Params> params) {
 
-		LOGGER.debug("Processing | Id={} | {}.executeInsert",
+		LOGGER.debug("Processing | Entity Id={} | {}.executeInsert",
 				id, InsertStatementExecutor.class.getSimpleName());
 
 		PreparedStatement statement;
@@ -88,7 +88,7 @@ public class InsertStatementExecutor implements IInsertStatementExecutor {
 
 		}
 
-		LOGGER.debug("Processed | Id={} | {}.executeInsert",
+		LOGGER.debug("Processed | Entity Id={} | {}.executeInsert",
 				id, InsertStatementExecutor.class.getSimpleName());
 
 		return true;

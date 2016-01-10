@@ -25,7 +25,7 @@ public class TempleService implements ApplicationContextAware, ITempleService {
 	
 	@Override
 	public Temple addTemple(Temple temple) {
-		LOGGER.debug("Processing | Id={} | {}.addTemple", temple.getId(), TempleService.class.getSimpleName());
+		LOGGER.debug("Processing | Entity Id={} | {}.addTemple", temple.getId(), TempleService.class.getSimpleName());
 
 		IDataLoader dataLoader = (IDataLoader) context.getBean(BeanConstants.DATA_LOADER);
 		Temple newTemple = dataLoader.addTemple(temple);
@@ -44,7 +44,7 @@ public class TempleService implements ApplicationContextAware, ITempleService {
 			}
 		}
 		
-		LOGGER.debug("Processed | Id={} | {}.addTemple", temple.getId(), TempleService.class.getSimpleName());
+		LOGGER.debug("Processed | Entity Id={} | {}.addTemple", temple.getId(), TempleService.class.getSimpleName());
 		return newTemple;
 	}
 

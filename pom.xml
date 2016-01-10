@@ -24,7 +24,6 @@
 		<module>consume</module>
 		<module>query</module>
 		<module>ingest-client</module>
-    <module>query-processor</module>
   </modules>
 	
 	<build>

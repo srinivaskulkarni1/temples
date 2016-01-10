@@ -40,7 +40,7 @@ public class TempleResource {
 					BeanConstants.QUERY_RESOURCE_BEAN_FILE);
 		} catch (BeansException e) {
 			LOGGER.error(LogConstants.MARKER_FATAL,
-					"Failed to load conext | {}", e.getMessage());
+					"Failed to load context | Exception Message={}", e.getMessage());
 		}
 		context.registerShutdownHook();
 		LOGGER.debug("Initialized | {}", TempleResource.class.getName());
@@ -77,23 +77,22 @@ public class TempleResource {
 	}
 
 	@GET
-	@Path("/{place}/{god}")
-	public Response getTemple(@PathParam("place") String place,
-			@PathParam("god") String god,
+	@Path("/{Id}")
+	public Response getTemple(@PathParam("Id") String id,
 			@Context HttpServletRequest requestContext) {
 		String requestURL = requestContext.getRequestURL().toString();
 		String incomingIP = requestContext.getRemoteAddr();
 		LOGGER.info(
-				"Processing | Request Method=GET | Request URL={} | Path Parameters={},{} | Remote Host={}",
-				requestURL, place, god, incomingIP);
+				"Processing | Request Method=GET | Request URL={} | Path Parameters={} | Remote Host={}",
+				requestURL, id, incomingIP);
 		templeService = (ITempleService) context
 				.getBean(BeanConstants.TEMPLE_SERVICE);
-		Temple temple = templeService.getTemple(place, god);
+		Temple temple = templeService.getTemple(id);
 		GenericEntity<Temple> entity = new GenericEntity<Temple>(temple) {
 		};
 		LOGGER.info(
-				"Processed | Request Method=GET | Request URL={} | Path Parameters={},{} | Remote Host={}",
-				requestURL, place, god, incomingIP);
+				"Processed | Request Method=GET | Request URL={} | Path Parameters={} | Remote Host={}",
+				requestURL, id, incomingIP);
 		return Response.ok(entity).build();
 	}
 }

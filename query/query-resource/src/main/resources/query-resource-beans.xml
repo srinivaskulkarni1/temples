@@ -7,6 +7,7 @@
 	xmlns:context="http://www.springframework.org/schema/context">
 
 	<import resource="classpath*:/data-model-beans.xml" />
+	<import resource="classpath*:/query-processor-beans.xml" />
 
 	<bean id="templeservice" class="com.temples.in.query_resource.services.TempleService" />
 

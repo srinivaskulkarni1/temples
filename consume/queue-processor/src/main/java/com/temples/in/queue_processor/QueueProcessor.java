@@ -65,7 +65,7 @@ public class QueueProcessor {
 					BeanConstants.QUEUE_PROCSSOR_BEAN_FILE);
 		} catch (BeansException e) {
 			LOGGER.error(LogConstants.MARKER_FATAL,
-					"Failed to load conext | Exception Message={}", e.getMessage());
+					"Failed to load context | Exception Message={}", e.getMessage());
 		}
 		context.registerShutdownHook();
 

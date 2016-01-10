@@ -37,7 +37,7 @@ public class TempleResource {
 					BeanConstants.INGEST_RESOURCE_BEAN_FILE);
 		} catch (BeansException e) {
 			LOGGER.error(LogConstants.MARKER_FATAL,
-					"Failed to load conext | Exception Message={}", e.getMessage());
+					"Failed to load context | Exception Message={}", e.getMessage());
 		}
 		context.registerShutdownHook();
 		LOGGER.debug("Initialized | {}", TempleResource.class.getName());
@@ -64,7 +64,7 @@ public class TempleResource {
 		String id = IDGen.getCompressedUuid(true);
 
 		LOGGER.info(
-				"Processing | Id={} | Request Method=POST | URI={} | Remote Host={}",
+				"Processing | Entity Id={} | Request Method=POST | URI={} | Remote Host={}",
 				id, requestURI, incomingIP);
 		ITempleService templeService = (ITempleService) context
 				.getBean(BeanConstants.TEMPLE_SERVICE);
@@ -72,7 +72,7 @@ public class TempleResource {
 		temple.setId(id);
 		Temple newTemple = templeService.addTemple(temple);
 		LOGGER.info(
-				"Processed | Id={} | Request Method=POST | URI={} | Remote Host={}",
+				"Processed | Entity Id={} | Request Method=POST | URI={} | Remote Host={}",
 				id, requestURI, incomingIP);
 
 		if (newTemple == null) {

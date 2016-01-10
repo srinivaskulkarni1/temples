@@ -21,7 +21,7 @@ public class DataLoader implements ApplicationContextAware, IDataLoader {
 
 	@Override
 	public Temple addTemple(Temple temple) {
-		LOGGER.debug("Processing | Id={} | {}.addTemple",
+		LOGGER.debug("Processing | Entity Id={} | {}.addTemple",
 				temple.getId(), DataLoader.class.getSimpleName());
 
 		IDBConnection dbConnection = getDBConnection();
@@ -30,17 +30,17 @@ public class DataLoader implements ApplicationContextAware, IDataLoader {
 
 		Session session = dbConnection.getSession();
 		
-		LOGGER.info("Creating new entity | Id={}",
+		LOGGER.info("Creating new entity | Entity Id={}",
 				temple.getId());		
 
 		boolean bInserted = insertStatementExecutor.executeInsert(temple.getId(),
 				session, QueryStrings.TEMPLE_INSERT_QUERY,
 				paramsBuilder.buildTempleParams(temple));
 
-		LOGGER.info("New entity created successfully | Id={}",
+		LOGGER.info("New entity created successfully | Entity Id={}",
 				temple.getId());
 		
-		LOGGER.debug("Processed | Id={} | {}.addTemple",
+		LOGGER.debug("Processed | Entity Id={} | {}.addTemple",
 				temple.getId(), DataLoader.class.getSimpleName());
 
 		if (!bInserted) {
