@@ -5,18 +5,14 @@ import java.util.concurrent.TimeoutException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.temples.in.common_utils.Configuration;
-import com.temples.in.query_util.BeanConstants;
 
-public class QueueProcessor implements ApplicationContextAware {
+public class QueueProcessor {
 	private Connection connection;
 	private Channel channel;
 	private String QUEUE_HOST;
@@ -24,7 +20,9 @@ public class QueueProcessor implements ApplicationContextAware {
 	private String ROUTING_KEY;
 	private static Logger LOGGER = LoggerFactory
 			.getLogger(QueueProcessor.class);
-	private AbstractApplicationContext context;
+
+	@Autowired
+	private QueueMessageConsumer consumer;
 
 	private void readProperties() {
 		LOGGER = LoggerFactory.getLogger(QueueProcessor.class);
@@ -72,9 +70,10 @@ public class QueueProcessor implements ApplicationContextAware {
 			String queueName = channel.queueDeclare().getQueue();
 			channel.queueBind(queueName, EXCHANGE_NAME, ROUTING_KEY);
 			channel.basicQos(1);
-			QueueMessageConsumer queueMessageConsumer = getQueueMessageConsumer(
-					channel, queueName);
-			queueMessageConsumer.init();
+
+			consumer.setChannel(channel);
+			consumer.setQueueName(queueName);
+			consumer.init();
 		} catch (IOException e) {
 			LOGGER.error(
 					"IOException while initializing queue. Exception Message={}",
@@ -87,28 +86,6 @@ public class QueueProcessor implements ApplicationContextAware {
 
 		return true;
 
-	}
-
-	private QueueMessageConsumer getQueueMessageConsumer(Channel channel,
-			String queueName) {
-		try {
-			QueueMessageConsumer consumer = (QueueMessageConsumer) context
-					.getBean(BeanConstants.QUEUE_MESSAGE_CONSUMER);
-			consumer.setChannel(channel);
-			consumer.setQueueName(queueName);
-			return consumer;
-		} catch (BeansException e) {
-			LOGGER.error(
-					"BeansException occured while creating consumer {} | Exception Message={}",
-					queueName, e.getLocalizedMessage());
-			return null;
-		}
-	}
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		this.context = (AbstractApplicationContext) applicationContext;
 	}
 
 	public void destroy() {
@@ -125,27 +102,5 @@ public class QueueProcessor implements ApplicationContextAware {
 					e.getLocalizedMessage());
 		}
 	}
-
-	/*
-	 * public static void main(String[] args) {
-	 * LOGGER.info("****** STARTING CONSUME PROCESS ******"); QueueProcessor
-	 * queueProcessor = null; try { queueProcessor = new QueueProcessor(); }
-	 * catch (IOException e) { LOGGER.error( LogConstants.MARKER_FATAL,
-	 * "IOException occured while aquiring new connection | Host={} | Exception Message={}"
-	 * , Configuration.getProperty(Configuration.QUEUE_HOST),
-	 * e.getLocalizedMessage()); LOGGER.error(LogConstants.MARKER_FATAL,
-	 * "Application will exit now..."); System.exit(0); } catch
-	 * (TimeoutException e) { LOGGER.error( LogConstants.MARKER_FATAL,
-	 * "TimeoutException occured while aquiring new connection | Host={} |Exception Message={}"
-	 * , Configuration.getProperty(Configuration.QUEUE_HOST),
-	 * e.getLocalizedMessage()); LOGGER.error(LogConstants.MARKER_FATAL,
-	 * "Application will exit now..."); System.exit(0); }
-	 * 
-	 * boolean bStarted = queueProcessor.init(); if (!bStarted) {
-	 * System.exit(0); }
-	 * 
-	 * LOGGER.info("****** CONSUME PROCESS STARTED SUCCESSFULLY ******");
-	 * System.out.println(" [*] Waiting for messages. To exit press CTRL+C"); }
-	 */
 
 }

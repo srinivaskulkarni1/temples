@@ -6,10 +6,9 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
@@ -19,12 +18,18 @@ import com.temples.in.data_model.Temple;
 import com.temples.in.data_model.table_info.DBConstants;
 import com.temples.in.data_model.wrapper.PrimaryKey;
 import com.temples.in.query_data.data_access.IDBConnection;
-import com.temples.in.query_util.BeanConstants;
 
-public class TempleDataLoader implements ApplicationContextAware, IDataLoader {
+@Component(value="templedataloader")
+public class TempleDataLoader implements IDataLoader {
 
-	private AbstractApplicationContext context;
+	@Autowired
+	@Qualifier("dbconnection")
 	private IDBConnection dbConnection;
+
+	@Autowired
+	@Qualifier("paramsbuilder")
+	private IParamsBulder paramsBuilder;
+
 	private static Logger LOGGER = LoggerFactory
 			.getLogger(TempleDataLoader.class);
 
@@ -33,7 +38,6 @@ public class TempleDataLoader implements ApplicationContextAware, IDataLoader {
 		LOGGER.debug("Processing {}.getAll",
 				TempleDataLoader.class.getSimpleName());
 
-		dbConnection = getDBConnection();
 		List<BaseEntity> templeList = new ArrayList<BaseEntity>();
 		ResultSet resultSet = dbConnection
 				.getAll(QueryStrings.TEMPLE_SELECT_ALL);
@@ -59,8 +63,6 @@ public class TempleDataLoader implements ApplicationContextAware, IDataLoader {
 		LOGGER.debug("Entity Id={} | Processing {}.getOne", entityId,
 				TempleDataLoader.class.getSimpleName());
 
-		dbConnection = getDBConnection();
-		IParamsBulder paramsBuilder = getParamsBuilder();
 		Temple temple = null;
 
 		ResultSet resultSet = dbConnection.getOne(
@@ -76,12 +78,6 @@ public class TempleDataLoader implements ApplicationContextAware, IDataLoader {
 		return temple;
 	}
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		this.context = (AbstractApplicationContext) applicationContext;
-	}
-
 	private Temple convertToEntity(Row row) {
 		ByteBuffer bytes = row.getBytes(DBConstants.ENTITY);
 		String entityAsString = Conversions.bb_to_str(bytes);
@@ -90,11 +86,4 @@ public class TempleDataLoader implements ApplicationContextAware, IDataLoader {
 		return temple;
 	}
 
-	private IDBConnection getDBConnection() {
-		return (IDBConnection) context.getBean(BeanConstants.DB_CONNECTION);
-	}
-
-	private IParamsBulder getParamsBuilder() {
-		return (IParamsBulder) context.getBean(BeanConstants.PARAMS_BUILDER);
-	}
 }

@@ -13,12 +13,7 @@ public class Temple extends BaseEntity {
 		super();
 	}
 	
-	public Temple(String god, String place, String state, String district) {
-		this.god = god;
-		this.place = place;
-		this.state = state;
-		this.district = district;
-	}
+	
 	
 	public String getGod() {
 		return god;

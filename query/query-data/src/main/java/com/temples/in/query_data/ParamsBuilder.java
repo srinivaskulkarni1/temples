@@ -10,10 +10,12 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.stereotype.Component;
 
 import com.temples.in.data_model.wrapper.PrimaryKey;
 import com.temples.in.query_util.BeanConstants;
 
+@Component(value="paramsbuilder")
 public class ParamsBuilder implements ApplicationContextAware, IParamsBulder {
 
 	private AbstractApplicationContext context;

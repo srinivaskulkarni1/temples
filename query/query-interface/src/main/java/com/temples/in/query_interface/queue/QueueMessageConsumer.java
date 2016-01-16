@@ -4,10 +4,9 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonSyntaxException;
 import com.rabbitmq.client.AMQP;
@@ -18,13 +17,16 @@ import com.rabbitmq.client.ShutdownSignalException;
 import com.temples.in.common_utils.Conversions;
 import com.temples.in.data_model.table_info.DBConstants;
 import com.temples.in.data_model.wrapper.EntityInfo;
-import com.temples.in.query_util.BeanConstants;
 
-public class QueueMessageConsumer implements Consumer, ApplicationContextAware {
+@Component 
+class QueueMessageConsumer implements Consumer {
 
 	private Channel channel;
 	private String queueName;
-	private AbstractApplicationContext context;
+	
+	@Autowired
+	@Qualifier("messageprocessor")
+	private IMessageProcessor messageProcessor;
 
 	private static Logger LOGGER = LoggerFactory
 			.getLogger(QueueMessageConsumer.class);
@@ -72,15 +74,7 @@ public class QueueMessageConsumer implements Consumer, ApplicationContextAware {
 		String entityId = (String) entityInfo.getPrimaryKey().getPrimaryKeys()
 				.get(DBConstants.ID);
 		try {
-			MessageProcessor messageProcessor = (MessageProcessor) context
-					.getBean(BeanConstants.MESSAGE_PROCESSOR);
 			bProcessed = messageProcessor.process(entityId, entityInfo);
-		} catch (BeansException e) {
-			LOGGER.error(
-					"Entity Id={} | BeansException while processing queue message | Exception Message={}",
-					entityId, e.getLocalizedMessage());
-			LOGGER.debug("Entity Id={} | Message={}", entityId, message);
-			bProcessed = false;
 		} catch (Exception e) {
 			LOGGER.error(
 					"Entity Id={} | Exception while processing queue message | Exception Message={}",
@@ -115,7 +109,7 @@ public class QueueMessageConsumer implements Consumer, ApplicationContextAware {
 
 	}
 
-	public void init() {
+	void init() {
 		LOGGER.debug("Initializing {}...",
 				QueueMessageConsumer.class.getSimpleName());
 
@@ -128,11 +122,5 @@ public class QueueMessageConsumer implements Consumer, ApplicationContextAware {
 					e.getLocalizedMessage());
 		}
 
-	}
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		this.context = (AbstractApplicationContext) applicationContext;
 	}
 }

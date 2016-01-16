@@ -1,6 +1,10 @@
 package com.temples.in.query_interface.resources;
 
-public class ErrorResponse {
+class ErrorResponse {
+
+	public ErrorResponse() {
+		super();
+	}
 
 	private String errorCode;
 	private String errorMessage;

@@ -10,16 +10,20 @@ import net.sf.ehcache.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import com.temples.in.data_model.Temple;
-import com.temples.in.query_interface.cache.EHCacheManager;
+import com.temples.in.query_interface.cache.IEHCacheManager;
 
+@Component(value="templeservice")
 public class TempleService implements ITempleService {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(TempleService.class);
 
 	@Autowired
-	private EHCacheManager ehCacheManager;
+	@Qualifier("ehcachemanager")
+	private IEHCacheManager ehCacheManager;
 
 	@Override
 	public List<Temple> getTemples() {

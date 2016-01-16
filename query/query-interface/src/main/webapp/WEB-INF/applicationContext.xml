@@ -9,13 +9,8 @@
 <!-- 	<import resource="classpath*:/query-processor-beans.xml" />
  -->	<import resource="classpath*:/query-data-beans.xml" />
 
-	<bean id="templeservice" class="com.temples.in.query_interface.services.TempleService" />
-	<bean id="ehcachemanager" class="com.temples.in.query_interface.cache.EHCacheManager" />
-	<!-- <bean class="com.temples.in.query_interface.resources.TempleResource" scope="request"/> -->
-	<bean id="queuemessageconsumer" class="com.temples.in.query_interface.queue.QueueMessageConsumer"/>
-	<bean id="messageprocessor" class="com.temples.in.query_interface.queue.MessageProcessor"/>
-	<bean id="queueprocessor" class="com.temples.in.query_interface.queue.QueueProcessor"/>
-	
+ 	<bean id="ehcachemanager" class="com.temples.in.query_interface.cache.EHCacheManager" />
+ 	<bean id="queueprocessor" class="com.temples.in.query_interface.queue.QueueProcessor"/>
 	
 	<context:annotation-config />
 	<context:component-scan base-package="com.temples.in.query_interface" />

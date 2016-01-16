@@ -17,10 +17,11 @@ import jersey.repackaged.com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.temples.in.data_model.Temple;
-import com.temples.in.query_interface.services.TempleService;
+import com.temples.in.query_interface.services.ITempleService;
 
 @Path("/temples")
 @Produces(MediaType.APPLICATION_JSON)
@@ -28,7 +29,8 @@ import com.temples.in.query_interface.services.TempleService;
 public class TempleResource {
 	
 	@Autowired
-	private TempleService templeService;
+	@Qualifier("templeservice")
+	private ITempleService templeService;
 	
 	private static Logger LOGGER = LoggerFactory
 			.getLogger(TempleResource.class);

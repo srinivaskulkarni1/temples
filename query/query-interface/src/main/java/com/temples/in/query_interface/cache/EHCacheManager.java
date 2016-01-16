@@ -8,53 +8,51 @@ import net.sf.ehcache.Element;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import com.temples.in.data_model.BaseEntity;
 import com.temples.in.query_data.IDataLoader;
-import com.temples.in.query_util.BeanConstants;
 
-public class EHCacheManager implements ApplicationContextAware {
+@Component(value="ehcachemanager")
+public class EHCacheManager implements IEHCacheManager {
 
 	private Cache templesCahce;
 	
+	@Autowired
+	@Qualifier("templedataloader")
+	IDataLoader dataLoader;
+
+	@Override
 	public Cache getTemplesCahce() {
 		return templesCahce;
 	}
 
 	private CacheManager cacheManager;
-	private AbstractApplicationContext context;
 
 	private static Logger LOGGER = LoggerFactory
 			.getLogger(EHCacheManager.class);
 
 
 	public EHCacheManager(){
+	}
+
+	@Override
+	public void init() {
 		LOGGER.debug("Creating application cache instance...");
 		this.cacheManager = CacheManager.newInstance();
 		this.templesCahce = cacheManager.getCache("templescache");
-	}
-
-	public void init() {
 		LOGGER.info("Inititializing application cache...");
-		IDataLoader dataLoader = (IDataLoader) context.getBean(BeanConstants.TEMPLE_DATA_LOADER);
 		List<BaseEntity> entityList = dataLoader.getAll();
 		for (BaseEntity baseEntity : entityList) {
 			templesCahce.put(new Element(baseEntity.getId(), baseEntity));
 		}
 	}
 
+	@Override
 	public void destroy() {
 		this.cacheManager.shutdown();
-	}
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		this.context =	(AbstractApplicationContext) applicationContext;
 	}
 
 }

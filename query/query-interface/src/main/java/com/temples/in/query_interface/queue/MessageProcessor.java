@@ -5,21 +5,26 @@ import net.sf.ehcache.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import com.temples.in.data_model.Temple;
 import com.temples.in.data_model.wrapper.Action;
 import com.temples.in.data_model.wrapper.EntityInfo;
 import com.temples.in.data_model.wrapper.EntityType;
 import com.temples.in.query_data.IDataLoader;
-import com.temples.in.query_interface.cache.EHCacheManager;
+import com.temples.in.query_interface.cache.IEHCacheManager;
 
-public class MessageProcessor {
+@Component(value="messageprocessor")
+public class MessageProcessor implements IMessageProcessor {
 
 	@Autowired
+	@Qualifier("templedataloader")
 	private IDataLoader dataLoader;
 
 	@Autowired
-	private EHCacheManager ehCacheManager;
+	@Qualifier("ehcachemanager")
+	private IEHCacheManager ehCacheManager;
 
 	private static Logger LOGGER = LoggerFactory
 			.getLogger(MessageProcessor.class);
@@ -27,6 +32,8 @@ public class MessageProcessor {
 	public MessageProcessor() {
 	}
 
+
+	@Override
 	public boolean process(String entityId, EntityInfo entityInfo)
 			throws Exception {
 

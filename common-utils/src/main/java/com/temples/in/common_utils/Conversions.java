@@ -11,7 +11,7 @@ import com.google.gson.JsonSyntaxException;
 
 public class Conversions {
 
-	public static Charset charset = Charset.forName("UTF-8");
+	private static Charset charset = Charset.forName("UTF-8");
 	private static Logger LOGGER = LoggerFactory.getLogger(Conversions.class);
 
 	public static ByteBuffer str_to_bb(String msg) {

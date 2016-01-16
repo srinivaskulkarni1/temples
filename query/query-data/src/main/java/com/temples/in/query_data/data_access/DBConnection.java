@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
@@ -28,6 +29,7 @@ import com.temples.in.query_data.Params;
 import com.temples.in.query_data.QueryStrings;
 import com.temples.in.query_data.exceptions.QueryDataException;
 
+@Component(value="dbconnection")
 public class DBConnection implements IDBConnection {
 
 	private Cluster cluster;
