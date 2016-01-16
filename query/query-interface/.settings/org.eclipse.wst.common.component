@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
   <wb-module deploy-name="query-interface">
-        <dependent-module archiveName="query-resource-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/query-resource/query-resource">
+        <dependent-module archiveName="query-data-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/query-data/query-data">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="data-model-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/data-model/data-model">
@@ -10,9 +10,6 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <dependent-module archiveName="query-util-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/query-util/query-util">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <dependent-module archiveName="query-processor-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/query-processor/query-processor">
             <dependency-type>uses</dependency-type>
         </dependent-module>
     <property name="context-root" value="query-interface"/>

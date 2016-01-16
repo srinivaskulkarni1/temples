@@ -32,12 +32,12 @@ public class QueueManager implements ApplicationContextAware, IQueueManager {
 	private static Connection connection;
 
 	private static final String INGEST_ROUTING_KEY = "INGEST_ROUTING_KEY";
-	private static String QUEUE_NAME;
+//	private static String QUEUE_NAME;
 	private static String QUEUE_HOST;
 	private static String EXCHANGE_NAME;
 
 	static {
-		QUEUE_NAME = Configuration.getProperty(Configuration.QUEUE_NAME);
+//		QUEUE_NAME = Configuration.getProperty(Configuration.QUEUE_NAME);
 		QUEUE_HOST = Configuration.getProperty(Configuration.QUEUE_HOST);
 		EXCHANGE_NAME = Configuration
 				.getProperty(Configuration.INGEST_EXCHANGE);
@@ -79,7 +79,7 @@ public class QueueManager implements ApplicationContextAware, IQueueManager {
 			}
 			Channel channel = connection.createChannel();
 			channel.exchangeDeclare(EXCHANGE_NAME, "direct", true);
-			channel.queueDeclare(QUEUE_NAME, true, false, false, null);
+			//channel.queueDeclare(QUEUE_NAME, true, false, false, null);
 			
 			//sends message to exchange instead of queue. queues need to listen to exchange to receive the message.
 			LOGGER.info("Posting queue message | Entity Id={}", id);

@@ -1,0 +1,28 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true"
+	monitoring="autodetect" dynamicConfig="true">
+
+	<!-- By default, Ehcache stored the cached files in temp folder. -->
+	<!-- <diskStore path="java.io.tmpdir" /> -->
+	
+	<!-- Ask Ehcache to store cache in this path -->
+<!-- 	<diskStore path="/var/data/cache" />
+ -->
+	<!-- Sample cache named cache1
+    This cache contains a maximum in memory of 10000 elements.
+
+    If there are more than 10000 elements it will overflow to the
+    disk cache, which in this configuration will go to wherever java.io.tmp is
+    defined on your system. On a standard Linux system this will be /tmp" -->
+	<cache name="templescache" 
+		maxEntriesLocalHeap="10000"
+		eternal="false" 
+		memoryStoreEvictionPolicy="LFU" 
+		overflowToDisk="false"
+		transactionalMode="off">
+<!-- 		maxEntriesLocalDisk="1000"  -->
+<!-- 		diskSpoolBufferSizeMB="20" -->
+<!-- 		<persistence strategy="localTempSwap" /> -->
+	</cache>
+
+</ehcache>

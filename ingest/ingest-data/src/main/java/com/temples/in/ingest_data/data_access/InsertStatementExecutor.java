@@ -1,11 +1,13 @@
 package com.temples.in.ingest_data.data_access;
 
+import java.nio.ByteBuffer;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.datastax.driver.core.BoundStatement;
+import com.datastax.driver.core.ConsistencyLevel;
 import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.exceptions.InvalidTypeException;
@@ -13,6 +15,8 @@ import com.datastax.driver.core.exceptions.NoHostAvailableException;
 import com.datastax.driver.core.exceptions.QueryExecutionException;
 import com.datastax.driver.core.exceptions.QueryValidationException;
 import com.datastax.driver.core.exceptions.UnsupportedFeatureException;
+import com.google.gson.Gson;
+import com.temples.in.data_model.BaseEntity;
 import com.temples.in.ingest_data.Params;
 import com.temples.in.ingest_data.ParamsBuilder;
 
@@ -30,7 +34,7 @@ public class InsertStatementExecutor implements IInsertStatementExecutor {
 		PreparedStatement statement;
 
 		try {
-			statement = session.prepare(queryString);
+			statement = session.prepare(queryString).setConsistencyLevel(ConsistencyLevel.ONE);
 		} catch (NoHostAvailableException e) {
 			return handleNoHostAvailableException(queryString, e);
 		}
@@ -41,6 +45,11 @@ public class InsertStatementExecutor implements IInsertStatementExecutor {
 				if (param.getType().equals(String.class)) {
 					boundStatement = boundStatement.setString(param.getName(),
 							(String) param.getValue());
+				}else if(param.getType().getGenericSuperclass().equals(BaseEntity.class)){
+					Gson gson = new Gson();
+					String entityAsString = gson.toJson(param.getValue());
+					boundStatement = boundStatement.setBytes(param.getName(),
+							ByteBuffer.wrap(entityAsString.getBytes()));
 				}
 			} catch (IllegalArgumentException e) {
 				LOGGER.error("Error applying parameter map. Insert operation aborted | Exception Mesasge={}"
@@ -60,7 +69,7 @@ public class InsertStatementExecutor implements IInsertStatementExecutor {
 
 			}
 		}
-
+		
 		try {
 			session.execute(boundStatement);
 		} catch (NoHostAvailableException e) {

@@ -15,10 +15,9 @@ public class Configuration extends PropertyPlaceholderConfigurer {
 
 	public static final String DB_CONNECT_RETRY_ATTEMPTS = "db.connect.retry.attempts";
 	public static final String DB_CONNECT_RETRY_DELAY = "db.connect.retry.delay";
-	public static final String QUEUE_NAME = "queue.name";
 	public static final String QUEUE_HOST = "queue.host";
 	public static final String INGEST_EXCHANGE = "queue.exchange";
-	public static final String NUM_CONSUMERS = "queue.consumers";
+	public static final String INGEST_ROUTING_KEY = "queue.routingkey";
 	public static final String CLIENT_INGEST_URL = "client.ingest_url";
 	public static final String DB_HOST = "db.host";
 

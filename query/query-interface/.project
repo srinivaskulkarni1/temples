@@ -3,11 +3,10 @@
   <name>query-interface</name>
   <comment>NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
   <projects>
-    <project>query-resource</project>
+    <project>query-data</project>
     <project>data-model</project>
     <project>common-utils</project>
     <project>query-util</project>
-    <project>query-processor</project>
   </projects>
   <buildSpec>
     <buildCommand>

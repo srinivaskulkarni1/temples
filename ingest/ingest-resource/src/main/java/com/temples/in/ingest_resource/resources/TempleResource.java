@@ -19,9 +19,11 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.temples.in.common_utils.LogConstants;
+import com.temples.in.data_model.EntityGroup;
 import com.temples.in.data_model.Temple;
 import com.temples.in.ingest_resource.services.ITempleService;
 import com.temples.in.ingest_util.BeanConstants;
+import com.temples.in.ingest_util.IDGen;
 
 @Path("/temples")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -64,16 +66,16 @@ public class TempleResource {
 		String id = IDGen.getCompressedUuid(true);
 
 		LOGGER.info(
-				"Processing | Entity Id={} | Request Method=POST | URI={} | Remote Host={}",
-				id, requestURI, incomingIP);
+				"Processing | Entity Group={}, Entity Id={} | Request Method=POST | URI={} | Remote Host={}",
+				EntityGroup.TEMPLES, id, requestURI, incomingIP);
 		ITempleService templeService = (ITempleService) context
 				.getBean(BeanConstants.TEMPLE_SERVICE);
 
 		temple.setId(id);
 		Temple newTemple = templeService.addTemple(temple);
 		LOGGER.info(
-				"Processed | Entity Id={} | Request Method=POST | URI={} | Remote Host={}",
-				id, requestURI, incomingIP);
+				"Processed | Entity Group={}, Entity Id={} | Request Method=POST | URI={} | Remote Host={}",
+				EntityGroup.TEMPLES, id, requestURI, incomingIP);
 
 		if (newTemple == null) {
 			ErrorResponse errorResponse = (ErrorResponse) context.getBean(BeanConstants.ERROR_RESPONSE);

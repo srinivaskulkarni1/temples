@@ -6,8 +6,12 @@ public class QueryStrings {
 
 	public static final String TEMPLE_INSERT_QUERY = "INSERT INTO "
 			+ DBConstants.TABLE_TEMPLE + "(" + DBConstants.ID + ","
-			+ DBConstants.TABLE_TEMPLE_GOD + ","
-			+ DBConstants.TABLE_TEMPLE_PLACE + ","
-			+ DBConstants.TABLE_TEMPLE_DISTRICT + ","
-			+ DBConstants.TABLE_TEMPLE_STATE + ")" + "VALUES (?,?,?,?,?);";
+			+ DBConstants.ENTITY + ")" + "VALUES (?,?);";
+	
+	public static final String TRANS_INFO_INSERT_QUERY = "INSERT INTO "
+			+ DBConstants.TABLE_TRANSACTION_INFO + "(" + DBConstants.TRANSACTION_ID + ","
+			+ DBConstants.ID + ","
+			+ DBConstants.TRANSACTION_DATE + ","
+			+ DBConstants.DELETED + ")" + "VALUES (?,?,?,?);";
+
 }

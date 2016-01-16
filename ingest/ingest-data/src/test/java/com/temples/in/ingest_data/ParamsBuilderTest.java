@@ -59,25 +59,25 @@ public class ParamsBuilderTest {
 		when(context.getBean(BeanConstants.PARAMS)).thenReturn(params1);
 		when(context.getBean(BeanConstants.PARAMS)).thenReturn(params2);
 		when(context.getBean(BeanConstants.PARAMS)).thenReturn(params3);
-		when(context.getBean(BeanConstants.PARAMS)).thenReturn(params4);
+//		when(context.getBean(BeanConstants.PARAMS)).thenReturn(params4);
 		
 		params1.setType(god.getClass());
 		params1.setName(DBConstants.TABLE_TEMPLE_GOD);
-		params1.setValue(god);
+//		params1.setValue(god);
 		
 		params2.setType(place.getClass());
 		params2.setName(DBConstants.TABLE_TEMPLE_PLACE);
-		params2.setValue(place);
+//		params2.setValue(place);
 		
 		params3.setType(district.getClass());
 		params3.setName(DBConstants.TABLE_TEMPLE_DISTRICT);
-		params3.setValue(district);
+//		params3.setValue(district);
 		
 		params4.setType(state.getClass());
 		params4.setName(DBConstants.TABLE_TEMPLE_STATE);
 		params4.setValue(state);
 		
-		List<Params> paramsList = paramsBuilder.buildTempleParams(temple);
+		List<Params> paramsList = paramsBuilder.buildParams(temple);
 		Assert.assertNotNull(paramsList);
 		assertEquals(paramsList.size(), 4);
 
@@ -99,7 +99,7 @@ public class ParamsBuilderTest {
 		when(temple.getDistrict()).thenReturn(null);
 		when(temple.getState()).thenReturn(null);
 		
-		List<Params> paramsList = paramsBuilder.buildTempleParams(temple);
+		List<Params> paramsList = paramsBuilder.buildParams(temple);
 		Assert.assertNotNull(paramsList);
 		assertEquals(paramsList.size(), 0);
 
@@ -142,7 +142,7 @@ public class ParamsBuilderTest {
 		params4.setName(DBConstants.TABLE_TEMPLE_STATE);
 		params4.setValue(state);
 		
-		List<Params> paramsList = paramsBuilder.buildTempleParams(temple);
+		List<Params> paramsList = paramsBuilder.buildParams(temple);
 		Assert.assertNotNull(paramsList);
 		assertEquals(paramsList.size(), 3);
 
@@ -185,7 +185,7 @@ public class ParamsBuilderTest {
 		params3.setName(DBConstants.TABLE_TEMPLE_DISTRICT);
 		params3.setValue(district);
 		
-		List<Params> paramsList = paramsBuilder.buildTempleParams(temple);
+		List<Params> paramsList = paramsBuilder.buildParams(temple);
 		Assert.assertNotNull(paramsList);
 		assertEquals(paramsList.size(), 3);
 

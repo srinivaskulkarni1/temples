@@ -1,4 +1,1 @@
-1,god,place,district,state
-2,Shri Krishna,Udupi,Udupi,Karnataka
-3,Shirdi Sai Baba,Shirdi,Ahmednagar,Maharashtra
-4,Shri Vadiraja,Sode,Shirsi,Karnataka
+ABC,1,2013-04-03 07:01:00,temples,'{"type": "temple","id": "1","district": "Udupi","god": "Shri Krishna","place": "Udupi", "state": "Karnataka"}'

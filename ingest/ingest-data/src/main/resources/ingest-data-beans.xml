@@ -9,7 +9,7 @@
 	<import resource="classpath*:/data-model-beans.xml" />
 	<import resource="classpath*:/common-utils-beans.xml" />
 
-	<bean id="dataloader" class="com.temples.in.ingest_data.DataLoader" />
+	<bean id="templedataloader" class="com.temples.in.ingest_data.data_loader.TempleDataLoader" />
 	<bean id="dbconnection" class="com.temples.in.ingest_data.data_access.DBConnection" />
 	<bean id="insertstmtexecutor" class="com.temples.in.ingest_data.data_access.InsertStatementExecutor" />
 	<bean id="params" class="com.temples.in.ingest_data.Params" scope="prototype"/>

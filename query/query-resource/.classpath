@@ -84,7 +84,16 @@
   <classpathentry kind="var" path="M2_REPO/org/hdrhistogram/HdrHistogram/2.1.6/HdrHistogram-2.1.6.jar" sourcepath="M2_REPO/org/hdrhistogram/HdrHistogram/2.1.6/HdrHistogram-2.1.6-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/commons-cli/commons-cli/1.3.1/commons-cli-1.3.1.jar" sourcepath="M2_REPO/commons-cli/commons-cli/1.3.1/commons-cli-1.3.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/twitter/jsr166e/1.1.0/jsr166e-1.1.0.jar" sourcepath="M2_REPO/com/twitter/jsr166e/1.1.0/jsr166e-1.1.0-sources.jar"/>
+  <classpathentry kind="src" path="/query-data"/>
+  <classpathentry kind="var" path="M2_REPO/com/datastax/cassandra/cassandra-driver-core/2.1.9/cassandra-driver-core-2.1.9.jar" sourcepath="M2_REPO/com/datastax/cassandra/cassandra-driver-core/2.1.9/cassandra-driver-core-2.1.9-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/io/netty/netty-handler/4.0.27.Final/netty-handler-4.0.27.Final.jar" sourcepath="M2_REPO/io/netty/netty-handler/4.0.27.Final/netty-handler-4.0.27.Final-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/io/netty/netty-buffer/4.0.27.Final/netty-buffer-4.0.27.Final.jar" sourcepath="M2_REPO/io/netty/netty-buffer/4.0.27.Final/netty-buffer-4.0.27.Final-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/io/netty/netty-common/4.0.27.Final/netty-common-4.0.27.Final.jar" sourcepath="M2_REPO/io/netty/netty-common/4.0.27.Final/netty-common-4.0.27.Final-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/io/netty/netty-transport/4.0.27.Final/netty-transport-4.0.27.Final.jar" sourcepath="M2_REPO/io/netty/netty-transport/4.0.27.Final/netty-transport-4.0.27.Final-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/io/netty/netty-codec/4.0.27.Final/netty-codec-4.0.27.Final.jar" sourcepath="M2_REPO/io/netty/netty-codec/4.0.27.Final/netty-codec-4.0.27.Final-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2.jar" sourcepath="M2_REPO/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/junit/junit/4.11/junit-4.11.jar" sourcepath="M2_REPO/junit/junit/4.11/junit-4.11-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar" sourcepath="M2_REPO/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/mockito/mockito-all/1.9.5/mockito-all-1.9.5.jar" sourcepath="M2_REPO/org/mockito/mockito-all/1.9.5/mockito-all-1.9.5-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/net/sf/ehcache/ehcache/2.10.1/ehcache-2.10.1.jar" sourcepath="M2_REPO/net/sf/ehcache/ehcache/2.10.1/ehcache-2.10.1-sources.jar"/>
 </classpath>

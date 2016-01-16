@@ -6,9 +6,18 @@ USE temples;
 
 CREATE TABLE temple(
 id VARCHAR,
-god VARCHAR,
-place VARCHAR,
-district VARCHAR,
-state VARCHAR,
+entity BLOB,
 PRIMARY KEY ((id))
 ); 
+
+INSERT INTO temple(ID, ENTITY ) 
+VALUES (
+'1',
+textAsBlob('{"type": "temple","id": "1","district": "Udupi","god": "Shri Krishna","place": "Udupi","state": "Karnataka"}')
+);
+
+INSERT INTO temple(ID, ENTITY ) 
+VALUES (
+'2',
+textAsBlob('{"type": "temple","id": "1","district": "Ahmednagar","god": "Sai Baba","place": "Shirdi","state": "Maharashtra"}')
+);

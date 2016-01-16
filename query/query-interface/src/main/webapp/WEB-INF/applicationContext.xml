@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+	xmlns:context="http://www.springframework.org/schema/context">
+
+<!-- 	<import resource="classpath*:/query-processor-beans.xml" />
+ -->	<import resource="classpath*:/query-data-beans.xml" />
+
+	<bean id="templeservice" class="com.temples.in.query_interface.services.TempleService" />
+	<bean id="ehcachemanager" class="com.temples.in.query_interface.cache.EHCacheManager" />
+	<!-- <bean class="com.temples.in.query_interface.resources.TempleResource" scope="request"/> -->
+	<bean id="queuemessageconsumer" class="com.temples.in.query_interface.queue.QueueMessageConsumer"/>
+	<bean id="messageprocessor" class="com.temples.in.query_interface.queue.MessageProcessor"/>
+	<bean id="queueprocessor" class="com.temples.in.query_interface.queue.QueueProcessor"/>
+	
+	
+	<context:annotation-config />
+	<context:component-scan base-package="com.temples.in.query_interface" />
+
+</beans>

@@ -7,6 +7,7 @@
     <project>common-utils</project>
     <project>query-util</project>
     <project>query-processor</project>
+    <project>query-data</project>
   </projects>
   <buildSpec>
     <buildCommand>

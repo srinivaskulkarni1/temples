@@ -1,5 +1,12 @@
 package com.temples.in.query_processor.processor;
 
+import io.searchbox.client.JestClient;
+import io.searchbox.client.JestClientFactory;
+import io.searchbox.client.JestResult;
+import io.searchbox.client.config.HttpClientConfig;
+import io.searchbox.core.Search;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +18,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +40,36 @@ public class ESQueryProcessor {
 			.getLogger(ESQueryProcessor.class);
 	private String esURL = "http://localhost:9200";
 
+	public <T> T getOne(String value){
+		JestClientFactory factory = new JestClientFactory();
+		factory.setHttpClientConfig(new HttpClientConfig
+		       .Builder(esURL)
+		       .multiThreaded(true)
+		       .build());
+		JestClient client = factory.getObject();
+
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		searchSourceBuilder.query(QueryBuilders.queryStringQuery(value));
+		
+		Search search = new Search.Builder(searchSourceBuilder.toString())
+        .addIndex("temples")
+        .addType("temple")
+        .build();
+		
+		try {
+			JestResult result = client.execute(search);
+			List<Temple> list = result.getSourceAsObjectList(Temple.class);
+			System.out.println(list);
+			return (T) list;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	
 	public <T> List<T> getAll(String resource, Class<T> clazz) {
 		LOGGER.debug("Processing {}.getAll",
 				ESQueryProcessor.class.getSimpleName());
@@ -162,7 +201,7 @@ public class ESQueryProcessor {
 
 	public static void main(String[] args) {
 		ESQueryProcessor esQueryProcessor = new ESQueryProcessor();
-		List<Temple> temples = esQueryProcessor.getAll("temples", Temple.class);
+		List<Temple> temples = esQueryProcessor.getOne("Shri Krishna");
 		System.out.println(temples);
 	}
 }

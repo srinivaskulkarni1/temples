@@ -38,9 +38,14 @@
 		</dependency>
 		<dependency>
 			<groupId>com.temples.in</groupId>
-			<artifactId>query-processor	</artifactId>
+			<artifactId>query-processor</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.temples.in</groupId>
+			<artifactId>query-data</artifactId>
+			<version>${project.version}</version>
+		</dependency>		
 		<!-- Jersey dependencies for REST -->
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
@@ -104,6 +109,10 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+		</dependency>		
 	</dependencies>
 
 	<properties>

@@ -31,4 +31,5 @@
   <classpathentry kind="var" path="M2_REPO/io/netty/netty-transport/4.0.27.Final/netty-transport-4.0.27.Final.jar" sourcepath="M2_REPO/io/netty/netty-transport/4.0.27.Final/netty-transport-4.0.27.Final-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/io/netty/netty-codec/4.0.27.Final/netty-codec-4.0.27.Final.jar" sourcepath="M2_REPO/io/netty/netty-codec/4.0.27.Final/netty-codec-4.0.27.Final-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2.jar" sourcepath="M2_REPO/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/google/code/gson/gson/2.5/gson-2.5.jar" sourcepath="M2_REPO/com/google/code/gson/gson/2.5/gson-2.5-sources.jar"/>
 </classpath>
