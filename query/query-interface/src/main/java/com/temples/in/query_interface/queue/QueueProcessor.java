@@ -47,10 +47,6 @@ public class QueueProcessor {
 
 	}
 
-	public void close() throws IOException, TimeoutException {
-		this.connection.close();
-	}
-
 	public boolean init() {
 		// Create a connection factory
 		LOGGER.info("Creating new ConnectionFactory | Host={}", QUEUE_HOST);

@@ -8,18 +8,18 @@ import com.temples.in.data_model.table_info.DBConstants;
 
 public class QueryStrings {
 
-	public static final String TEMPLE_SELECT_ONE_QUERY = "SELECT" + " "
+	private static final String TEMPLE_SELECT_ONE_QUERY = "SELECT" + " "
 			+ DBConstants.ID + "," + DBConstants.ENTITY + " " + "FROM" + " "
 			+ DBConstants.TABLE_TEMPLE + " " + "WHERE" + " " + DBConstants.ID
 			+ "=" + "?" + ";";
 
-	public static final String TEMPLE_SELECT_ALL_QUERY = "SELECT" + " "
+	private static final String TEMPLE_SELECT_ALL_QUERY = "SELECT" + " "
 			+ DBConstants.ID + "," + DBConstants.ENTITY + " " + "FROM" + " "
 			+ DBConstants.TABLE_TEMPLE + ";";
 
-	public static final String TEMPLE_SELECT_ONE = "TEMPLE_SELECT_ONE";
+	static final String TEMPLE_SELECT_ONE = "TEMPLE_SELECT_ONE";
 
-	public static final String TEMPLE_SELECT_ALL = "TEMPLE_SELECT_ALL";
+	static final String TEMPLE_SELECT_ALL = "TEMPLE_SELECT_ALL";
 
 	private static Map<String, PreparedStatement> preparedStmtMap = new HashMap<String, PreparedStatement>();
 
