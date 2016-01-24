@@ -8,8 +8,8 @@
 
 <!-- 	<import resource="classpath*:/data-model-beans.xml" />
  -->
-	<bean id="esqueryprocessor" class="com.temples.in.query_processor.processor.ESQueryProcessor" />
-
+<!-- 	<bean id="esqueryprocessor" class="com.temples.in.query_processor.processor.ESQueryProcessor" />
+ -->
 	<context:annotation-config />
 	<context:component-scan base-package="com.temples.in.query_processor" />
 

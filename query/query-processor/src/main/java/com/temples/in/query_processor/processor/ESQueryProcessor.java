@@ -8,7 +8,9 @@ import io.searchbox.core.Search;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
@@ -18,10 +20,12 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -34,12 +38,42 @@ import com.temples.in.data_model.Temple;
 import com.temples.in.query_processor.builder.ESQuery;
 import com.temples.in.query_processor.builder.Results;
 
+@Component(value="esqueryprocessor")
 public class ESQueryProcessor {
 
 	private static Logger LOGGER = LoggerFactory
 			.getLogger(ESQueryProcessor.class);
 	private String esURL = "http://localhost:9200";
 
+	public String process(Map<String, String[]> parameterMap){
+		
+		JestClientFactory factory = new JestClientFactory();
+		factory.setHttpClientConfig(new HttpClientConfig
+		       .Builder(esURL)
+		       .multiThreaded(true)
+		       .build());
+		JestClient client = factory.getObject();
+
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+
+		Iterator<Map.Entry<String, String[]>> entries = parameterMap
+				.entrySet().iterator();
+		
+		QueryBuilder qb = null;
+		while (entries.hasNext()) {
+			Map.Entry<String, String[]> entry = entries.next();
+
+			if(qb == null){
+			qb = QueryBuilders
+					.boolQuery()
+					.must(QueryBuilders.termQuery(entry.getKey(), entry.getValue()[0]));
+			}
+		}
+		
+		
+		return null;
+	}
+	
 	public <T> T getOne(String value){
 		JestClientFactory factory = new JestClientFactory();
 		factory.setHttpClientConfig(new HttpClientConfig
@@ -70,7 +104,7 @@ public class ESQueryProcessor {
 	}
 	
 	
-	public <T> List<T> getAll(String resource, Class<T> clazz) {
+/*	public <T> List<T> getAll(String resource, Class<T> clazz) {
 		LOGGER.debug("Processing {}.getAll",
 				ESQueryProcessor.class.getSimpleName());
 		String query = new ESQuery.Builder().baseURL(esURL).path(resource)
@@ -150,7 +184,7 @@ public class ESQueryProcessor {
 		throw new RuntimeException(exceptionName
 				+ " while parsing query results. Exception Message="
 				+ ex.getLocalizedMessage());
-	}
+	}*/
 
 	private void handleESResponse(Response response) {
 		LOGGER.debug("Processing {}.handleESResponse",

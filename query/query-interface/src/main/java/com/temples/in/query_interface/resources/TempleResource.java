@@ -1,6 +1,7 @@
 package com.temples.in.query_interface.resources;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -45,14 +46,31 @@ public class TempleResource {
 	 * objects
 	 */
 
+	@SuppressWarnings("unchecked")
 	@GET
 	public Response getTemples(@Context HttpServletRequest requestContext) {
 		String requestURL = requestContext.getRequestURL().toString();
 		String incomingIP = requestContext.getRemoteAddr();
+		Map<String, String[]> parameterMap = requestContext.getParameterMap();
+
 		LOGGER.info(
 				"Processing | Request Method=GET | Request URL={} | Remote Host={}",
 				requestURL, incomingIP);
-		List<Temple> templeList = templeService.getTemples();
+
+		List<Temple> templeList = null;
+		if (parameterMap.size() > 0) {
+			templeList = templeService.getFilteredTemples(parameterMap);
+			
+			/*			Iterator<Map.Entry<String, String[]>> entries = parameterMap
+					.entrySet().iterator();
+			while (entries.hasNext()) {
+				Map.Entry<String, String[]> entry = entries.next();
+				System.out.println(entry.getKey() + "/" + entry.getValue());
+			}*/
+		} else {
+			templeList = templeService.getTemples();
+		}
+		
 		GenericEntity<List<Temple>> entity = new GenericEntity<List<Temple>>(
 				Lists.newArrayList(templeList)) {
 		};

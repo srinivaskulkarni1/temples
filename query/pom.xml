@@ -41,6 +41,7 @@
  		<module>query-util</module>	
  		<module>query-interface</module>
 		<module>query-data</module>
+<!-- 		<module>query-processor</module> -->
 	</modules>
 	
 	<build>

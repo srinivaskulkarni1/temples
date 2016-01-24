@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.temples.in.data_model.Temple;
 import com.temples.in.query_interface.cache.IEHCacheManager;
+//import com.temples.in.query_processor.processor.ESQueryProcessor;
 
 @Component(value="templeservice")
 public class TempleService implements ITempleService {
@@ -24,6 +25,9 @@ public class TempleService implements ITempleService {
 	@Autowired
 	@Qualifier("ehcachemanager")
 	private IEHCacheManager ehCacheManager;
+	
+//	@Autowired
+//	ESQueryProcessor esQueryProcessor;
 
 	@Override
 	public List<Temple> getTemples() {
@@ -58,6 +62,12 @@ public class TempleService implements ITempleService {
 				TempleService.class.getSimpleName());
 
 		return (Temple) element.getObjectValue();
+	}
+
+	@Override
+	public List<Temple> getFilteredTemples(Map<String, String[]> parameterMap) {
+		//String id = esQueryProcessor.process(parameterMap);
+		return null;
 	}
 
 }

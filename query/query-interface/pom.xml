@@ -46,7 +46,12 @@
 			<groupId>com.temples.in</groupId>
 			<artifactId>query-data</artifactId>
 			<version>${project.version}</version>
-		</dependency>		
+		</dependency>	
+<!-- 		<dependency>
+			<groupId>com.temples.in</groupId>
+			<artifactId>query-processor</artifactId>
+			<version>${project.version}</version>
+		</dependency> -->				
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>

@@ -23,6 +23,7 @@
 		<module>ingest</module>
 		<module>query</module>
 		<module>ingest-client</module>
+    <module>logmonitor</module>
   </modules>
 	
 	<build>
