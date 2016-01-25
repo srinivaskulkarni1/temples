@@ -1,20 +1,22 @@
-package com.temples.in.query_interface.resources;
+package com.temples.in.query_interface.exception_mappers.cacher;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import net.sf.ehcache.CacheException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Provider
-public class GenericExceptionMapper implements ExceptionMapper<Throwable>{
+public class CacheExceptionMapper implements ExceptionMapper<CacheException>{
 	
 	private static Logger LOGGER = LoggerFactory
-			.getLogger(GenericExceptionMapper.class);
+			.getLogger(CacheExceptionMapper.class);
 
 	@Override
-	public Response toResponse(Throwable ex) {
+	public Response toResponse(CacheException ex) {
 		LOGGER.error("Internal exception while processing | Exception Type={} | Exception Message={}", ex.getClass().getName(), ex.getLocalizedMessage());
 		ErrorResponse errorResponse = new ErrorResponse();
 		errorResponse.setErrorCode("500");

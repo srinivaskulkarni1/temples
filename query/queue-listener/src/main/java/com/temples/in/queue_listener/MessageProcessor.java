@@ -1,4 +1,4 @@
-package com.temples.in.query_interface.queue;
+package com.temples.in.queue_listener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

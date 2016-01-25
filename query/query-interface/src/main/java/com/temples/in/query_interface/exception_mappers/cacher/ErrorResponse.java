@@ -1,6 +1,6 @@
-package com.temples.in.query_interface.resources;
+package com.temples.in.query_interface.exception_mappers.cacher;
 
-class ErrorResponse {
+public class ErrorResponse {
 
 	public ErrorResponse() {
 		super();

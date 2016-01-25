@@ -70,16 +70,21 @@
 			<artifactId>query-util</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>com.temples.in</groupId>
 			<artifactId>query-processor</artifactId>
 			<version>${project.version}</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>com.temples.in</groupId>
 			<artifactId>cacher</artifactId>
 			<version>${project.version}</version>
-		</dependency>		
+		</dependency>
+		<dependency>
+			<groupId>com.temples.in</groupId>
+			<artifactId>queue-listener</artifactId>
+			<version>${project.version}</version>
+		</dependency>			
 		<!-- Jersey dependencies for REST -->
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
@@ -144,8 +149,8 @@
 			<artifactId>jersey-spring3</artifactId>
 		</dependency>	
 		<dependency>
-			<groupId>com.rabbitmq</groupId>
-			<artifactId>amqp-client</artifactId>
-		</dependency>		
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+		</dependency>			
 	</dependencies>
 </project>

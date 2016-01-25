@@ -1,4 +1,4 @@
-package com.temples.in.query_interface.queue;
+package com.temples.in.queue_listener;
 
 import com.temples.in.data_model.wrapper.EntityInfo;
 

@@ -1,4 +1,4 @@
-package com.temples.in.query_interface.queue;
+package com.temples.in.queue_listener;
 
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.times;
@@ -19,6 +19,7 @@ import com.temples.in.data_model.wrapper.EntityInfo;
 import com.temples.in.data_model.wrapper.EntityType;
 import com.temples.in.data_model.wrapper.PrimaryKey;
 import com.temples.in.query_data.IDataLoader;
+import com.temples.in.queue_listener.MessageProcessor;
 
 public class MessageProcessorTest {
 

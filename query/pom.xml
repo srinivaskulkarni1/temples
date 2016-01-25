@@ -41,7 +41,8 @@
  		<module>query-util</module>	
  		<module>query-interface</module>
 		<module>query-data</module>
-		    <module>cacher</module>
+		<module>cacher</module>
+		<module>queue-listener</module>
 <!-- 		<module>query-processor</module> -->
 	</modules>
 	

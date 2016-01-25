@@ -7,7 +7,7 @@
     <project>data-model</project>
     <project>common-utils</project>
     <project>query-util</project>
-    <project>query-processor</project>
+    <project>cacher</project>
   </projects>
   <buildSpec>
     <buildCommand>
