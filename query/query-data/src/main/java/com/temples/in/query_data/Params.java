@@ -1,6 +1,11 @@
 package com.temples.in.query_data;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 @SuppressWarnings("rawtypes")
+@Component
+@Scope("prototype")
 public class Params {
 
 	private Class type;

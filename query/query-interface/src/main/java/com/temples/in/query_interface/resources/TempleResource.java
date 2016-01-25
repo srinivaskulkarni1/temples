@@ -28,11 +28,11 @@ import com.temples.in.query_interface.services.ITempleService;
 @Produces(MediaType.APPLICATION_JSON)
 @Component
 public class TempleResource {
-	
+
 	@Autowired
 	@Qualifier("templeservice")
 	private ITempleService templeService;
-	
+
 	private static Logger LOGGER = LoggerFactory
 			.getLogger(TempleResource.class);
 
@@ -60,24 +60,25 @@ public class TempleResource {
 		List<Temple> templeList = null;
 		if (parameterMap.size() > 0) {
 			templeList = templeService.getFilteredTemples(parameterMap);
-			
-			/*			Iterator<Map.Entry<String, String[]>> entries = parameterMap
-					.entrySet().iterator();
-			while (entries.hasNext()) {
-				Map.Entry<String, String[]> entry = entries.next();
-				System.out.println(entry.getKey() + "/" + entry.getValue());
-			}*/
 		} else {
 			templeList = templeService.getTemples();
 		}
+
+		Response res;
 		
-		GenericEntity<List<Temple>> entity = new GenericEntity<List<Temple>>(
-				Lists.newArrayList(templeList)) {
-		};
+		if(templeList.size() == 0){
+			res = Response.noContent().build();
+		}else{
+			GenericEntity<List<Temple>> entity = new GenericEntity<List<Temple>>(
+					Lists.newArrayList(templeList)) {
+			};
+			res = Response.ok(entity).build();
+		}
+		
 		LOGGER.info(
 				"Processed | Request Method=GET | Request URL={} | Remote Host={}",
 				requestURL, incomingIP);
-		return Response.ok(entity).build();
+		return res;
 	}
 
 	@GET
@@ -90,11 +91,19 @@ public class TempleResource {
 				"Processing | Request Method=GET | Request URL={} | Path Parameters={} | Remote Host={}",
 				requestURL, id, incomingIP);
 		Temple temple = templeService.getTemple(id);
-		GenericEntity<Temple> entity = new GenericEntity<Temple>(temple) {
-		};
+		
+		Response res;
+		
+		if(temple == null){
+			res = Response.noContent().build();
+		}else{
+			GenericEntity<Temple> entity = new GenericEntity<Temple>(temple) {
+			};
+			res = Response.ok(entity).build();
+		}
 		LOGGER.info(
 				"Processed | Request Method=GET | Request URL={} | Path Parameters={} | Remote Host={}",
 				requestURL, id, incomingIP);
-		return Response.ok(entity).build();
+		return res;
 	}
 }

@@ -6,11 +6,11 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
 	xmlns:context="http://www.springframework.org/schema/context">
 
-<!-- 	<import resource="classpath*:/data-model-beans.xml" />
- -->	<import resource="classpath*:/common-utils-beans.xml" />
+	<!-- <import resource="classpath*:/data-model-beans.xml" /> -->
+	<import resource="classpath*:/common-utils-beans.xml" />
 
-	<bean id="params" class="com.temples.in.query_data.Params" scope="prototype"/>
-	<context:annotation-config />
+	<!-- <bean id="params" class="com.temples.in.query_data.Params" scope="prototype"/> -->
 	<context:component-scan base-package="com.temples.in.query_data" />
+	<context:annotation-config />
 
 </beans>

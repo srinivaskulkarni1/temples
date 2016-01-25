@@ -1,6 +1,9 @@
 package com.temples.in.query_interface.cache;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -15,27 +18,21 @@ import org.springframework.stereotype.Component;
 import com.temples.in.data_model.BaseEntity;
 import com.temples.in.query_data.IDataLoader;
 
-@Component(value="ehcachemanager")
+@Component(value = "ehcachemanager")
 public class EHCacheManager implements IEHCacheManager {
 
 	private Cache templesCahce;
-	
+
 	@Autowired
 	@Qualifier("templedataloader")
 	IDataLoader dataLoader;
-
-	@Override
-	public Cache getTemplesCahce() {
-		return templesCahce;
-	}
 
 	private CacheManager cacheManager;
 
 	private static Logger LOGGER = LoggerFactory
 			.getLogger(EHCacheManager.class);
 
-
-	public EHCacheManager(){
+	public EHCacheManager() {
 	}
 
 	@Override
@@ -55,4 +52,49 @@ public class EHCacheManager implements IEHCacheManager {
 		this.cacheManager.shutdown();
 	}
 
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List<? extends BaseEntity> getAll(CacheType caches) {
+
+		List<BaseEntity> entityList = new ArrayList<BaseEntity>();
+
+		if (CacheType.Temples.equals(caches)) {
+
+			List keys = templesCahce.getKeys();
+
+			if (keys != null && keys.size() > 0) {
+				Map<Object, Element> allElements = templesCahce.getAll(keys);
+
+				Iterator<Map.Entry<Object, Element>> entries = allElements
+						.entrySet().iterator();
+				while (entries.hasNext()) {
+					Map.Entry<Object, Element> entry = entries.next();
+					BaseEntity objectValue = (BaseEntity) entry.getValue()
+							.getObjectValue();
+					entityList.add(objectValue);
+				}
+			}
+		}
+
+		return entityList;
+	}
+
+	@Override
+	public void put(String id, BaseEntity entity, CacheType caches) {
+		if (CacheType.Temples.equals(caches)) {
+			templesCahce.put(new Element(id, entity));
+		}
+	}
+
+	@Override
+	public BaseEntity getOne(String id, CacheType caches) {
+		if (CacheType.Temples.equals(caches)) {
+
+			Element element = templesCahce.get(id);
+			if (element != null) {
+				return (BaseEntity) element.getObjectValue();
+			}
+		}
+		return null;
+	}
 }

@@ -1,7 +1,5 @@
 package com.temples.in.query_interface.queue;
 
-import net.sf.ehcache.Element;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +11,7 @@ import com.temples.in.data_model.wrapper.Action;
 import com.temples.in.data_model.wrapper.EntityInfo;
 import com.temples.in.data_model.wrapper.EntityType;
 import com.temples.in.query_data.IDataLoader;
+import com.temples.in.query_interface.cache.CacheType;
 import com.temples.in.query_interface.cache.IEHCacheManager;
 
 @Component(value="messageprocessor")
@@ -44,13 +43,19 @@ public class MessageProcessor implements IMessageProcessor {
 		boolean bProcessed = false;
 
 		if (entityInfo != null) {
-			if (entityInfo.getAction().equals(Action.POST)) {
+			if (Action.POST.equals(entityInfo.getAction())) {
 				bProcessed = handlePOSTRequest(entityId, entityInfo);
-			} else if (entityInfo.getAction().equals(Action.PUT)) {
+			} else if (Action.PUT.equals(entityInfo.getAction())) {
 				throw new Exception("PUT request not implemented!!!");
-			} else if (entityInfo.getAction().equals(Action.DELETE)) {
+			} else if (Action.DELETE.equals(entityInfo.getAction())) {
 				throw new Exception("DELETE request not implemented!!!");
+			} else{
+				LOGGER.warn("Unsupported Action. Unable to process | Entity Id={}", entityId);
+				throw new Exception("Unable to process. Information provided cannot be processed");
 			}
+		}else{
+			LOGGER.warn("Entity Info is empty. Unable to process | Entity Id={}", entityId);
+			throw new Exception("Unable to process. Information provided cannot be processed");
 		}
 
 		LOGGER.debug("Entity Id={} | Processed {}.process", entityId,
@@ -65,13 +70,12 @@ public class MessageProcessor implements IMessageProcessor {
 		LOGGER.debug("Entity Id={} | Processing {}.handlePUTRequest", entityId,
 				MessageProcessor.class.getSimpleName());
 
-		if (entityInfo.getEntityType().equals(EntityType.TEMPLE)) {
+		if (EntityType.TEMPLE.equals(entityInfo.getEntityType())) {
 			Temple temple = (Temple) dataLoader.getOne(entityInfo
 					.getPrimaryKey());
 			if (temple != null) {
 				LOGGER.debug("Entity Id={} | Adding entity to cache", entityId);
-				ehCacheManager.getTemplesCahce().put(
-						new Element(entityId, temple));
+				ehCacheManager.put(entityId, temple, CacheType.Temples);;
 			} else {
 				LOGGER.warn(
 						"Entity not found in data store. Ignoring queue message. | Entity Id={}",
