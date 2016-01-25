@@ -11,14 +11,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.temples.in.cacher.CacheType;
+import com.temples.in.cacher.IEHCacheManager;
 import com.temples.in.data_model.Temple;
 import com.temples.in.data_model.wrapper.Action;
 import com.temples.in.data_model.wrapper.EntityInfo;
 import com.temples.in.data_model.wrapper.EntityType;
 import com.temples.in.data_model.wrapper.PrimaryKey;
 import com.temples.in.query_data.IDataLoader;
-import com.temples.in.query_interface.cache.CacheType;
-import com.temples.in.query_interface.cache.IEHCacheManager;
 
 public class MessageProcessorTest {
 

@@ -6,13 +6,11 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
 	xmlns:context="http://www.springframework.org/schema/context">
 
-	<!-- <import resource="classpath*:/query-processor-beans.xml" /> -->
 	<import resource="classpath*:/query-data-beans.xml" />
-	<import resource="classpath*:/cacher-beans.xml" />
 
-	<bean id="queueprocessor" class="com.temples.in.query_interface.queue.QueueProcessor" />
-
+ 	<bean id="ehcachemanager" class="com.temples.in.cacher.EHCacheManager" />
+	
 	<context:annotation-config />
-	<context:component-scan base-package="com.temples.in.query_interface" />
+	<context:component-scan base-package="com.temples.in.cacher" />
 
 </beans>

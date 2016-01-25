@@ -1,4 +1,4 @@
-package com.temples.in.query_interface.cache;
+package com.temples.in.cacher;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -6,7 +6,7 @@ import javax.servlet.ServletContextListener;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import com.temples.in.query_interface.cache.IEHCacheManager;
+import com.temples.in.cacher.IEHCacheManager;
 import com.temples.in.query_interface.queue.QueueProcessor;
 import com.temples.in.query_util.BeanConstants;
 

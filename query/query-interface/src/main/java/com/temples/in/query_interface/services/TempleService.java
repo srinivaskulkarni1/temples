@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.temples.in.cacher.CacheType;
+import com.temples.in.cacher.IEHCacheManager;
 import com.temples.in.data_model.Temple;
-import com.temples.in.query_interface.cache.CacheType;
-import com.temples.in.query_interface.cache.IEHCacheManager;
 
 @Component(value = "templeservice")
 public class TempleService implements ITempleService {

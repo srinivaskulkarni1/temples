@@ -16,9 +16,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import com.temples.in.cacher.CacheType;
+import com.temples.in.cacher.IEHCacheManager;
 import com.temples.in.data_model.Temple;
-import com.temples.in.query_interface.cache.CacheType;
-import com.temples.in.query_interface.cache.IEHCacheManager;
 
 public class TempleServiceTest {
 

@@ -106,5 +106,6 @@
 	<classpathentry kind="var" path="M2_REPO/org/glassfish/hk2/external/asm-all-repackaged/2.4.0-b31/asm-all-repackaged-2.4.0-b31.jar" sourcepath="M2_REPO/org/glassfish/hk2/external/asm-all-repackaged/2.4.0-b31/asm-all-repackaged-2.4.0-b31-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/glassfish/hk2/spring-bridge/2.4.0-b31/spring-bridge-2.4.0-b31.jar" sourcepath="M2_REPO/org/glassfish/hk2/spring-bridge/2.4.0-b31/spring-bridge-2.4.0-b31-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/rabbitmq/amqp-client/3.6.0/amqp-client-3.6.0.jar" sourcepath="M2_REPO/com/rabbitmq/amqp-client/3.6.0/amqp-client-3.6.0-sources.jar"/>
+	<classpathentry kind="src" path="/cacher"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
