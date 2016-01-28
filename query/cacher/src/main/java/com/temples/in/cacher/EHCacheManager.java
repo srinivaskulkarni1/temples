@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 
 import org.slf4j.Logger;
@@ -21,11 +21,11 @@ import com.temples.in.query_data.IDataLoader;
 @Component(value = "ehcachemanager")
 public class EHCacheManager implements IEHCacheManager {
 
-	private Cache templesCahce;
+	private Ehcache templesCahce;
 
 	@Autowired
 	@Qualifier("templedataloader")
-	IDataLoader dataLoader;
+	private IDataLoader dataLoader;
 
 	private CacheManager cacheManager;
 
@@ -38,13 +38,18 @@ public class EHCacheManager implements IEHCacheManager {
 	@Override
 	public void init() {
 		LOGGER.debug("Creating application cache instance...");
-		this.cacheManager = CacheManager.newInstance();
-		this.templesCahce = cacheManager.getCache("templescache");
+		this.cacheManager = getCacheManagerInstance();
+		this.templesCahce = cacheManager.getEhcache("templescache");
 		LOGGER.info("Inititializing application cache...");
 		List<BaseEntity> entityList = dataLoader.getAll();
 		for (BaseEntity baseEntity : entityList) {
-			templesCahce.put(new Element(baseEntity.getId(), baseEntity));
+			Element element = new Element(baseEntity.getId(), baseEntity);
+			templesCahce.put(element);
 		}
+	}
+
+	CacheManager getCacheManagerInstance() {
+		return CacheManager.newInstance();
 	}
 
 	@Override
@@ -58,7 +63,7 @@ public class EHCacheManager implements IEHCacheManager {
 
 		List<BaseEntity> entityList = new ArrayList<BaseEntity>();
 
-		if (CacheType.Temples.equals(caches)) {
+		if (null != caches && CacheType.Temples.equals(caches)) {
 
 			List keys = templesCahce.getKeys();
 
@@ -81,20 +86,25 @@ public class EHCacheManager implements IEHCacheManager {
 
 	@Override
 	public void put(String id, BaseEntity entity, CacheType caches) {
-		if (CacheType.Temples.equals(caches)) {
+		if (null != caches && CacheType.Temples.equals(caches)) {
 			templesCahce.put(new Element(id, entity));
 		}
 	}
 
 	@Override
 	public BaseEntity getOne(String id, CacheType caches) {
-		if (CacheType.Temples.equals(caches)) {
+		if (null != caches && CacheType.Temples.equals(caches)) {
 
 			Element element = templesCahce.get(id);
 			if (element != null) {
-				return (BaseEntity) element.getObjectValue();
+				return getBaseEntity(element);
 			}
 		}
 		return null;
+	}
+
+	BaseEntity getBaseEntity(Element element) {
+		BaseEntity value = (BaseEntity) element.getObjectValue();
+		return value;
 	}
 }

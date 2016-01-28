@@ -110,9 +110,6 @@ class QueueMessageConsumer implements Consumer {
 	}
 
 	void init() {
-		LOGGER.debug("Initializing {}...",
-				QueueMessageConsumer.class.getSimpleName());
-
 		try {
 			LOGGER.info("Starting Queue Consumer...");
 			channel.basicConsume(queueName, false, this);

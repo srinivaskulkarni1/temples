@@ -40,11 +40,7 @@ public class QueueProcessor {
 	}
 
 	public QueueProcessor() {
-
-		LOGGER.debug("Initializing | {}", QueueProcessor.class.getName());
-
 		readProperties();
-
 	}
 
 	public boolean init() {
