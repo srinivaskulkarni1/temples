@@ -39,7 +39,8 @@ public class CassandraStore implements IDBConnection {
 
 	private Cluster cluster;
 	private Session session;
-	private static Logger LOGGER = LoggerFactory.getLogger(DBConnection.class);
+	private static Logger LOGGER = LoggerFactory
+			.getLogger(CassandraStore.class);
 
 	private String[] seedNodes;
 	private String userName;
@@ -117,10 +118,10 @@ public class CassandraStore implements IDBConnection {
 	public Session getSession() {
 		if (session == null) {
 			LOGGER.debug("Initializing {}.Session",
-					DBConnection.class.getSimpleName());
+					CassandraStore.class.getSimpleName());
 			connect();
 			LOGGER.debug("Initialized {}.Session",
-					DBConnection.class.getSimpleName());
+					CassandraStore.class.getSimpleName());
 		}
 		return session;
 	}
@@ -141,12 +142,12 @@ public class CassandraStore implements IDBConnection {
 				.addContactPoints(seedNodes)
 				.withPort(cassandraPort)
 				.withCredentials(userName, password)
+				.withQueryOptions(queryOptions)
+				.withRetryPolicy(DefaultRetryPolicy.INSTANCE)
 				.withLoadBalancingPolicy(
 						new TokenAwarePolicy(DCAwareRoundRobinPolicy.builder()
 								.withLocalDc(cassandraDC)
 								.withUsedHostsPerRemoteDc(0).build()))
-				.withRetryPolicy(DefaultRetryPolicy.INSTANCE)
-				.withQueryOptions(queryOptions)
 				.withSocketOptions(socketOptions).build();
 
 		Metadata metadata = cluster.getMetadata();
@@ -166,7 +167,7 @@ public class CassandraStore implements IDBConnection {
 	public ResultSet getAll(String statementId) {
 
 		LOGGER.debug("Processing {}.getAll | statement Id={}",
-				DBConnection.class.getSimpleName(), statementId);
+				CassandraStore.class.getSimpleName(), statementId);
 
 		ResultSet rs = null;
 		Session sessionObj = getSession();
@@ -182,7 +183,7 @@ public class CassandraStore implements IDBConnection {
 		BoundStatement boundStatement = new BoundStatement(statement);
 		rs = sessionObj.execute(boundStatement);
 		LOGGER.debug("Processed {}.getAll | statement Id={}",
-				DBConnection.class.getSimpleName(), statementId);
+				CassandraStore.class.getSimpleName(), statementId);
 		return rs;
 
 	}
@@ -217,7 +218,7 @@ public class CassandraStore implements IDBConnection {
 
 	public ResultSet getOne(String statementId, List<Params> params) {
 		LOGGER.debug("Processing {}.getOne | statement Id={}",
-				DBConnection.class.getSimpleName(), statementId);
+				CassandraStore.class.getSimpleName(), statementId);
 
 		ResultSet rs = null;
 		Session sessionObj = getSession();
@@ -298,7 +299,7 @@ public class CassandraStore implements IDBConnection {
 		}
 
 		LOGGER.debug("Processing {}.getOne | statement Id={}",
-				DBConnection.class.getSimpleName(), statementId);
+				CassandraStore.class.getSimpleName(), statementId);
 		return rs;
 
 	}
