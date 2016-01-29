@@ -17,9 +17,9 @@ public class ClassCastExceptionMapper implements ExceptionMapper<ClassCastExcept
 
 	@Override
 	public Response toResponse(ClassCastException ex) {
-		LOGGER.error("Internal exception while processing | Error Code={} | Exception Type={} | Exception Message={}", ErrorCodes.IllegalStateError, ex.getClass().getName(), ex.getLocalizedMessage());
+		LOGGER.error("Internal exception while processing | Error Code={} | Exception Type={} | Exception Message={}", ErrorCodes.illegalStateError, ex.getClass().getName(), ex.getLocalizedMessage());
 		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setErrorCode(ErrorCodes.ClassCastError);
+		errorResponse.setErrorCode(ErrorCodes.classCastError);
 		errorResponse.setErrorMessage("Internal exception. Exception Type: " + ex.getClass().getName() + ", Exception Message: " + ex.getLocalizedMessage());
 		errorResponse.setEntity("Unknown");
 		errorResponse.setEntityId("Unknown");

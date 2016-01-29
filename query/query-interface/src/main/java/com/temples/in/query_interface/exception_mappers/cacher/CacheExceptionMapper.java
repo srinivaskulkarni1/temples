@@ -19,9 +19,9 @@ public class CacheExceptionMapper implements ExceptionMapper<CacheException>{
 
 	@Override
 	public Response toResponse(CacheException ex) {
-		LOGGER.error("Internal exception while processing | Error Code={} | Exception Type={} | Exception Message={}", ErrorCodes.IllegalStateError, ex.getClass().getName(), ex.getLocalizedMessage());
+		LOGGER.error("Internal exception while processing | Error Code={} | Exception Type={} | Exception Message={}", ErrorCodes.illegalStateError, ex.getClass().getName(), ex.getLocalizedMessage());
 		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setErrorCode(ErrorCodes.CacheError);
+		errorResponse.setErrorCode(ErrorCodes.cacheError);
 		errorResponse.setErrorMessage("Internal exception. Exception Type: " + ex.getClass().getName() + ", Exception Message: " + ex.getLocalizedMessage());
 		errorResponse.setEntity("Unknown");
 		errorResponse.setEntityId("Unknown");

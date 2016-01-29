@@ -17,9 +17,9 @@ public class IllegalStateExceptionMapper implements ExceptionMapper<IllegalState
 
 	@Override
 	public Response toResponse(IllegalStateException ex) {
-		LOGGER.error("Internal exception while processing | Error Code={} | Exception Type={} | Exception Message={}", ErrorCodes.IllegalStateError, ex.getClass().getName(), ex.getLocalizedMessage());
+		LOGGER.error("Internal exception while processing | Error Code={} | Exception Type={} | Exception Message={}", ErrorCodes.illegalStateError, ex.getClass().getName(), ex.getLocalizedMessage());
 		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setErrorCode(ErrorCodes.IllegalStateError);
+		errorResponse.setErrorCode(ErrorCodes.illegalStateError);
 		errorResponse.setErrorMessage("Internal exception. Exception Type: " + ex.getClass().getName() + ", Exception Message: " + ex.getLocalizedMessage());
 		errorResponse.setEntity("Unknown");
 		errorResponse.setEntityId("Unknown");

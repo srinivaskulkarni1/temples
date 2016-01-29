@@ -40,7 +40,7 @@ public class EHCacheManager implements IEHCacheManager {
 		LOGGER.debug("Creating application cache instance...");
 		this.cacheManager = getCacheManagerInstance();
 		this.templesCahce = cacheManager.getEhcache("templescache");
-		LOGGER.info("Inititializing application cache...");
+		LOGGER.info("Initializing application cache...");
 		List<BaseEntity> entityList = dataLoader.getAll();
 		for (BaseEntity baseEntity : entityList) {
 			Element element = new Element(baseEntity.getId(), baseEntity);

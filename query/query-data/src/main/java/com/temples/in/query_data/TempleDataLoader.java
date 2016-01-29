@@ -23,7 +23,7 @@ import com.temples.in.query_data.data_access.IDBConnection;
 public class TempleDataLoader implements IDataLoader {
 
 	@Autowired
-	@Qualifier("dbconnection")
+	@Qualifier("cassandrastore")
 	private IDBConnection dbConnection;
 
 	@Autowired

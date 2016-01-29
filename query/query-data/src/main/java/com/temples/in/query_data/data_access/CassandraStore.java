@@ -4,15 +4,20 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.ConsistencyLevel;
+import com.datastax.driver.core.Host;
+import com.datastax.driver.core.Metadata;
 import com.datastax.driver.core.PreparedStatement;
+import com.datastax.driver.core.QueryOptions;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Session;
-import com.datastax.driver.core.exceptions.AuthenticationException;
-import com.datastax.driver.core.exceptions.InvalidQueryException;
+import com.datastax.driver.core.SocketOptions;
 import com.datastax.driver.core.exceptions.InvalidTypeException;
 import com.datastax.driver.core.exceptions.NoHostAvailableException;
 import com.datastax.driver.core.exceptions.QueryExecutionException;
@@ -21,33 +26,91 @@ import com.datastax.driver.core.exceptions.UnsupportedFeatureException;
 import com.datastax.driver.core.policies.DCAwareRoundRobinPolicy;
 import com.datastax.driver.core.policies.DefaultRetryPolicy;
 import com.datastax.driver.core.policies.TokenAwarePolicy;
+import com.temples.in.common_utils.ApplicationConfiguration;
 import com.temples.in.common_utils.ApplicationErrorCodes;
-import com.temples.in.common_utils.Configuration;
-import com.temples.in.common_utils.LogConstants;
-import com.temples.in.data_model.table_info.DBConstants;
 import com.temples.in.query_data.Params;
 import com.temples.in.query_data.QueryStrings;
 import com.temples.in.query_data.exceptions.QueryDataException;
+import com.temples.in.query_util.ErrorCodes;
 
-@Component(value="dbconnection")
-public class DBConnection implements IDBConnection {
+@Component
+@Qualifier(value = "cassandrastore")
+public class CassandraStore implements IDBConnection {
 
 	private Cluster cluster;
 	private Session session;
 	private static Logger LOGGER = LoggerFactory.getLogger(DBConnection.class);
-	private final static Integer DEFAULT_MAX_RETRIES = 3;
-	private final static Integer DEFAULT_DELAY = 10;
-	private static int retryAttempts;
-	private static int retryDelay;
-	private static String dbHost;
 
-	static {
+	private String[] seedNodes;
+	private String userName;
+	private String password;
+	private String keyspace;
+	private String consistencyLevel;
+	private String cassandraDC;
+	private int readTimeout;
+	private int cassandraPort;
 
-		retryAttempts = getRetryAttempts(Configuration
-				.getProperty(Configuration.DB_CONNECT_RETRY_ATTEMPTS));
-		retryDelay = getRetryDelay(Configuration
-				.getProperty(Configuration.DB_CONNECT_RETRY_DELAY));
-		dbHost = Configuration.getProperty(Configuration.DB_HOST);
+	@Autowired
+	ApplicationConfiguration configuration;
+
+	private void readConfig() {
+
+		LOGGER.info("Reading cassandra configuration properties...");
+		seedNodes = configuration.getCassandraSeedNodes();
+		if (seedNodes == null) {
+			throw new QueryDataException(
+					ErrorCodes.dbConnectError,
+					"Mandatory configuration paramater '"
+							+ ApplicationConfiguration.CONFIG_SEED_NODES
+							+ "' is not defined. Cannot connect to cassandra store");
+		}
+
+		userName = configuration.getCassandraUserName();
+
+		if (userName == null) {
+			throw new QueryDataException(
+					ErrorCodes.dbConnectError,
+					"Mandatory configuration paramater '"
+							+ ApplicationConfiguration.CONFIG_USERNAME
+							+ "' is not defined. Cannot connect to cassandra store");
+		}
+
+		password = configuration.getCassandraPassword();
+
+		if (password == null) {
+			throw new QueryDataException(
+					ErrorCodes.dbConnectError,
+					"Mandatory configuration paramater '"
+							+ ApplicationConfiguration.CONFIG_PASSWORD
+							+ "' is not defined. Cannot connect to cassandra store");
+		}
+
+		keyspace = configuration.getCassandraKeyspace();
+
+		if (keyspace == null) {
+			throw new QueryDataException(
+					ErrorCodes.dbConnectError,
+					"Mandatory configuration paramater '"
+							+ ApplicationConfiguration.CONFIG_KEYSPACE
+							+ "' is not defined. Cannot connect to cassandra store");
+		}
+
+		consistencyLevel = configuration.getCassandraConsistencyLevel();
+		readTimeout = configuration.getCassandraReadTimeout();
+		cassandraDC = configuration.getCassandraDC();
+		cassandraPort = configuration.getCassandraPort();
+
+		LOGGER.info("Cassandra configuration properties are:");
+		LOGGER.info(ApplicationConfiguration.CONFIG_SEED_NODES + "="
+				+ seedNodes[0]);
+		LOGGER.info(ApplicationConfiguration.CONFIG_PORT + "=" + cassandraPort);
+		LOGGER.info(ApplicationConfiguration.CONFIG_USERNAME + "=" + userName);
+		LOGGER.info(ApplicationConfiguration.CONFIG_KEYSPACE + "=" + keyspace);
+		LOGGER.info(ApplicationConfiguration.CONFIG_DEFAULT_CONSISTENCY_LEVEL
+				+ "=" + consistencyLevel);
+		LOGGER.info(ApplicationConfiguration.CONFIG_READ_TIMEOUT + "="
+				+ readTimeout);
+		LOGGER.info(ApplicationConfiguration.CONFIG_DC + "=" + cassandraDC);
 	}
 
 	@Override
@@ -63,112 +126,41 @@ public class DBConnection implements IDBConnection {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void connect() {
-		int retryCount = 0;
-		boolean isConnected = false;
 
-		while (!isConnected && retryCount < retryAttempts) {
-			retryCount++;
+		readConfig();
+		QueryOptions queryOptions = new QueryOptions();
+		queryOptions.setConsistencyLevel(ConsistencyLevel
+				.valueOf(consistencyLevel));
 
-			LOGGER.info("Database Initialization | Host={} | Keyspace={}",
-					dbHost, DBConstants.KEYSPACE);
-			cluster = Cluster
-					.builder()
-					.addContactPoint(dbHost)
-					.withRetryPolicy(DefaultRetryPolicy.INSTANCE)
-					.withLoadBalancingPolicy(
-							new TokenAwarePolicy(new DCAwareRoundRobinPolicy()))
-					.build();
-			try {
-				session = cluster.connect(DBConstants.KEYSPACE);
-				isConnected = true;
-			} catch (NoHostAvailableException e) {
-				handleConnectionException(retryAttempts, retryCount);
-				LOGGER.debug(
-						"NoHostAvailableException thrown | Exception Message={}",
-						e.getLocalizedMessage());
-			} catch (AuthenticationException e) {
-				handleConnectionException(retryAttempts, retryCount);
-				LOGGER.debug(
-						"AuthenticationException thrown | Exception Message={}",
-						e.getLocalizedMessage());
-			} catch (InvalidQueryException e) {
-				handleConnectionException(retryAttempts, retryCount);
-				LOGGER.debug(
-						"InvalidQueryException thrown | Exception Message={}",
-						e.getLocalizedMessage());
-			} catch (IllegalStateException e) {
-				handleConnectionException(retryAttempts, retryCount);
-				LOGGER.debug(
-						"IllegalStateException thrown | Exception Message={}",
-						e.getLocalizedMessage());
-			}
+		SocketOptions socketOptions = new SocketOptions();
+		socketOptions.setReadTimeoutMillis(readTimeout);
 
-			if (!isConnected) {
+		this.cluster = Cluster
+				.builder()
+				.addContactPoints(seedNodes)
+				.withPort(cassandraPort)
+				.withCredentials(userName, password)
+				.withLoadBalancingPolicy(
+						new TokenAwarePolicy(DCAwareRoundRobinPolicy.builder()
+								.withLocalDc(cassandraDC)
+								.withUsedHostsPerRemoteDc(0).build()))
+				.withRetryPolicy(DefaultRetryPolicy.INSTANCE)
+				.withQueryOptions(queryOptions)
+				.withSocketOptions(socketOptions).build();
 
-				try {
-					Thread.sleep(retryDelay);
-				} catch (InterruptedException e) {
-					LOGGER.warn("Retry failed | Exception Message={}",
-							e.getLocalizedMessage());
-				}
-			}
+		Metadata metadata = cluster.getMetadata();
+		LOGGER.info("Connected to cluster | {}", metadata.getClusterName());
+
+		for (Host host : metadata.getAllHosts()) {
+			LOGGER.info("Data Center={} | Host={} | Rack={}",
+					host.getDatacenter(), host.getAddress().toString(),
+					host.getRack());
 		}
 
-		if (isConnected) {
-			LOGGER.info("Connected to cluster | Host={} | Keyspace={}", dbHost,
-					DBConstants.KEYSPACE);
-		}
+		session = cluster.connect();
 
-	}
-
-	private static int getRetryAttempts(String numRetries) {
-		int retryAttempts = DEFAULT_MAX_RETRIES;
-		if (numRetries != null && numRetries.length() > 0) {
-			try {
-				retryAttempts = Integer.parseInt(numRetries);
-			} catch (NumberFormatException e) {
-				LOGGER.warn(
-						"Invalid property value | {}={} | expected integer value | defaulting to MAX_RETRIES (3)",
-						Configuration.DB_CONNECT_RETRY_ATTEMPTS, numRetries);
-			}
-		} else {
-			LOGGER.warn(
-					"Property {} not defined. Defaulting to MAX_RETRIES (3)",
-					Configuration.DB_CONNECT_RETRY_ATTEMPTS);
-		}
-		return retryAttempts;
-	}
-
-	private static int getRetryDelay(String retryInSecs) {
-		int delay = DEFAULT_DELAY;
-		if (retryInSecs != null && retryInSecs.length() > 0) {
-			try {
-				delay = Integer.parseInt(retryInSecs);
-			} catch (NumberFormatException e) {
-				LOGGER.warn(
-						"Invalid property value | {}={} | expected integer value | Defaulting to DEFAULT_RETRY_DELAY of 10 milliseconds",
-						Configuration.DB_CONNECT_RETRY_DELAY, retryInSecs);
-			}
-		} else {
-			LOGGER.warn(
-					"Property {} not defined. Defaulting to DEFAULT_RETRY_DELAY of 10 milliseconds",
-					Configuration.DB_CONNECT_RETRY_DELAY);
-		}
-		return delay;
-	}
-
-	private void handleConnectionException(int retryAttempts, int retryCount) {
-		if (retryCount < retryAttempts) {
-			LOGGER.warn(
-					"Database connection failed | retrying in | {} | milliseconds",
-					retryDelay);
-		} else {
-			LOGGER.error(LogConstants.MARKER_FATAL,
-					"Database connection failed. application will now exit...");
-			System.exit(0);
-		}
+		session.execute("USE " + keyspace);
 	}
 
 	public ResultSet getAll(String statementId) {
