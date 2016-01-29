@@ -9,6 +9,8 @@ import net.sf.ehcache.CacheException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.temples.in.query_util.ErrorCodes;
+
 @Provider
 public class CacheExceptionMapper implements ExceptionMapper<CacheException>{
 	
@@ -17,9 +19,9 @@ public class CacheExceptionMapper implements ExceptionMapper<CacheException>{
 
 	@Override
 	public Response toResponse(CacheException ex) {
-		LOGGER.error("Internal exception while processing | Exception Type={} | Exception Message={}", ex.getClass().getName(), ex.getLocalizedMessage());
+		LOGGER.error("Internal exception while processing | Error Code={} | Exception Type={} | Exception Message={}", ErrorCodes.IllegalStateError, ex.getClass().getName(), ex.getLocalizedMessage());
 		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setErrorCode("500");
+		errorResponse.setErrorCode(ErrorCodes.CacheError);
 		errorResponse.setErrorMessage("Internal exception. Exception Type: " + ex.getClass().getName() + ", Exception Message: " + ex.getLocalizedMessage());
 		errorResponse.setEntity("Unknown");
 		errorResponse.setEntityId("Unknown");

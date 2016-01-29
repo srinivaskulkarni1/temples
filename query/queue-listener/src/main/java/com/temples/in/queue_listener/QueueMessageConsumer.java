@@ -17,6 +17,7 @@ import com.rabbitmq.client.ShutdownSignalException;
 import com.temples.in.common_utils.Conversions;
 import com.temples.in.data_model.table_info.DBConstants;
 import com.temples.in.data_model.wrapper.EntityInfo;
+import com.temples.in.queue_listener.exceptions.QueueProcessingException;
 
 @Component 
 class QueueMessageConsumer implements Consumer {
@@ -75,10 +76,7 @@ class QueueMessageConsumer implements Consumer {
 				.get(DBConstants.ID);
 		try {
 			bProcessed = messageProcessor.process(entityId, entityInfo);
-		} catch (Exception e) {
-			LOGGER.error(
-					"Entity Id={} | Exception while processing queue message | Exception Message={}",
-					entityId, e.getLocalizedMessage());
+		} catch (QueueProcessingException e) {
 			LOGGER.debug("Entity Id={} | Message={}", entityId, message);
 			bProcessed = false;
 		} finally {

@@ -20,6 +20,7 @@ import com.temples.in.data_model.wrapper.EntityType;
 import com.temples.in.data_model.wrapper.PrimaryKey;
 import com.temples.in.query_data.IDataLoader;
 import com.temples.in.queue_listener.MessageProcessor;
+import com.temples.in.queue_listener.exceptions.QueueProcessingException;
 
 public class MessageProcessorTest {
 
@@ -47,7 +48,7 @@ public class MessageProcessorTest {
 	}
 	
 	@Test
-	public void test_process_temple_post_NotNull() throws Exception {
+	public void test_process_temple_post_NotNull() throws QueueProcessingException {
 		when(entityInfo.getAction()).thenReturn(Action.POST);
 		when(entityInfo.getEntityType()).thenReturn(EntityType.TEMPLE);
 		when(entityInfo.getPrimaryKey()).thenReturn(primaryKey);
@@ -64,7 +65,7 @@ public class MessageProcessorTest {
 	}
 	
 	@Test
-	public void test_process_temple_post_Null() throws Exception {
+	public void test_process_temple_post_Null() throws QueueProcessingException {
 		when(entityInfo.getAction()).thenReturn(Action.POST);
 		when(entityInfo.getEntityType()).thenReturn(EntityType.TEMPLE);
 		when(entityInfo.getPrimaryKey()).thenReturn(primaryKey);
@@ -82,7 +83,7 @@ public class MessageProcessorTest {
 	}
 	
 	@Test
-	public void test_process_entity_post() throws Exception {
+	public void test_process_entity_post() throws QueueProcessingException {
 		when(entityInfo.getAction()).thenReturn(Action.POST);
 		when(entityInfo.getEntityType()).thenReturn(null);
 		
@@ -95,26 +96,26 @@ public class MessageProcessorTest {
 
 	}
 	
-	@Test(expected = Exception.class)
-	public void test_process_entity_put() throws Exception {
+	@Test(expected = QueueProcessingException.class)
+	public void test_process_entity_put() throws QueueProcessingException {
 		when(entityInfo.getAction()).thenReturn(Action.PUT);
 			messageProcessor.process("id1", entityInfo);
 	}
 	
-	@Test(expected = Exception.class)
-	public void test_process_entity_delete() throws Exception {
+	@Test(expected = QueueProcessingException.class)
+	public void test_process_entity_delete() throws QueueProcessingException {
 		when(entityInfo.getAction()).thenReturn(Action.DELETE);
 			messageProcessor.process("id1", entityInfo);
 	}
 	
-	@Test(expected = Exception.class)
-	public void test_process_entity_unsupported_action() throws Exception {
+	@Test(expected = QueueProcessingException.class)
+	public void test_process_entity_unsupported_action() throws QueueProcessingException {
 		when(entityInfo.getAction()).thenReturn(null);
 			messageProcessor.process("id1", entityInfo);
 	}
 	
-	@Test(expected = Exception.class)
-	public void test_process_entityInfo_null() throws Exception {
+	@Test(expected = QueueProcessingException.class)
+	public void test_process_entityInfo_null() throws QueueProcessingException {
 			messageProcessor.process("id1", null);
 	}
 

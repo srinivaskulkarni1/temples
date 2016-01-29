@@ -13,6 +13,8 @@ import com.temples.in.data_model.wrapper.Action;
 import com.temples.in.data_model.wrapper.EntityInfo;
 import com.temples.in.data_model.wrapper.EntityType;
 import com.temples.in.query_data.IDataLoader;
+import com.temples.in.query_util.ErrorCodes;
+import com.temples.in.queue_listener.exceptions.QueueProcessingException;
 
 @Component(value="messageprocessor")
 public class MessageProcessor implements IMessageProcessor {
@@ -34,28 +36,28 @@ public class MessageProcessor implements IMessageProcessor {
 
 	@Override
 	public boolean process(String entityId, EntityInfo entityInfo)
-			throws Exception {
+			throws QueueProcessingException {
 
 		LOGGER.debug("Entity Id={} | Processing {}.process", entityId,
 				MessageProcessor.class.getSimpleName());
 
-		LOGGER.info("Entity Id={} | Processing entity", entityId);
+		LOGGER.info("Entity Id={} | Processing Message", entityId);
 		boolean bProcessed = false;
 
 		if (entityInfo != null) {
 			if (Action.POST.equals(entityInfo.getAction())) {
 				bProcessed = handlePOSTRequest(entityId, entityInfo);
 			} else if (Action.PUT.equals(entityInfo.getAction())) {
-				throw new Exception("PUT request not implemented!!!");
+				throw new QueueProcessingException(ErrorCodes.queueError, "Entity Id=" + entityId + ": PUT request not implemented!!!");
 			} else if (Action.DELETE.equals(entityInfo.getAction())) {
-				throw new Exception("DELETE request not implemented!!!");
+				throw new QueueProcessingException(ErrorCodes.queueError, "Entity Id=" + entityId + ": DELETE request not implemented!!!");
 			} else{
-				LOGGER.warn("Unsupported Action. Unable to process | Entity Id={}", entityId);
-				throw new Exception("Unable to process. Information provided cannot be processed");
+				LOGGER.warn("Entity Id={} | Request not supported. Request must be one of the following: POST, PUT, DELETE", entityId);
+				throw new QueueProcessingException(ErrorCodes.queueError, "Entity Id=" + entityId + ": Request not supported. Request must be one of the following: POST, PUT, DELETE");
 			}
 		}else{
-			LOGGER.warn("Entity Info is empty. Unable to process | Entity Id={}", entityId);
-			throw new Exception("Unable to process. Information provided cannot be processed");
+			LOGGER.warn("Entity Id={} | Message retrieved from the queue is empty. Unable to process the request", entityId);
+			throw new QueueProcessingException(ErrorCodes.queueError, "Entity Id=" + entityId + ": Message retrieved from the queue is empty. Unable to process the request");
 		}
 
 		LOGGER.debug("Entity Id={} | Processed {}.process", entityId,
@@ -65,25 +67,23 @@ public class MessageProcessor implements IMessageProcessor {
 
 	}
 
-	private boolean handlePOSTRequest(String entityId, EntityInfo entityInfo)
-			throws Exception {
-		LOGGER.debug("Entity Id={} | Processing {}.handlePUTRequest", entityId,
+	private boolean handlePOSTRequest(String entityId, EntityInfo entityInfo) {
+		LOGGER.debug("Entity Id={} | Processing {}.handlePOSTRequest", entityId,
 				MessageProcessor.class.getSimpleName());
 
 		if (EntityType.TEMPLE.equals(entityInfo.getEntityType())) {
 			Temple temple = (Temple) dataLoader.getOne(entityInfo
 					.getPrimaryKey());
 			if (temple != null) {
-				LOGGER.debug("Entity Id={} | Adding entity to cache", entityId);
 				ehCacheManager.put(entityId, temple, CacheType.Temples);;
 			} else {
 				LOGGER.warn(
-						"Entity not found in data store. Ignoring queue message. | Entity Id={}",
+						"Entity Id={} | Entity not found in data store. Ignoring queue message",
 						entityId);
 			}
 		}
 
-		LOGGER.debug("Entity Id={} | Processed {}.handlePUTRequest", entityId,
+		LOGGER.debug("Entity Id={} | Processed {}.handlePOSTRequest", entityId,
 				MessageProcessor.class.getSimpleName());
 		return true;
 	}

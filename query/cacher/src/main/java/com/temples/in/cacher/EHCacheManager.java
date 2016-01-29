@@ -94,7 +94,7 @@ public class EHCacheManager implements IEHCacheManager {
 	@Override
 	public BaseEntity getOne(String id, CacheType caches) {
 		if (null != caches && CacheType.Temples.equals(caches)) {
-
+			LOGGER.info("Entity Id={} | Adding entity to cache", id);
 			Element element = templesCahce.get(id);
 			if (element != null) {
 				return getBaseEntity(element);

@@ -7,6 +7,8 @@ import javax.ws.rs.ext.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.temples.in.query_util.ErrorCodes;
+
 @Provider
 public class IllegalStateExceptionMapper implements ExceptionMapper<IllegalStateException>{
 	
@@ -15,9 +17,9 @@ public class IllegalStateExceptionMapper implements ExceptionMapper<IllegalState
 
 	@Override
 	public Response toResponse(IllegalStateException ex) {
-		LOGGER.error("Internal exception while processing | Exception Type={} | Exception Message={}", ex.getClass().getName(), ex.getLocalizedMessage());
+		LOGGER.error("Internal exception while processing | Error Code={} | Exception Type={} | Exception Message={}", ErrorCodes.IllegalStateError, ex.getClass().getName(), ex.getLocalizedMessage());
 		ErrorResponse errorResponse = new ErrorResponse();
-		errorResponse.setErrorCode("500");
+		errorResponse.setErrorCode(ErrorCodes.IllegalStateError);
 		errorResponse.setErrorMessage("Internal exception. Exception Type: " + ex.getClass().getName() + ", Exception Message: " + ex.getLocalizedMessage());
 		errorResponse.setEntity("Unknown");
 		errorResponse.setEntityId("Unknown");

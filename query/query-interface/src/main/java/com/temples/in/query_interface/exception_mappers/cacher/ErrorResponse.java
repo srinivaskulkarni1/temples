@@ -1,5 +1,6 @@
 package com.temples.in.query_interface.exception_mappers.cacher;
 
+
 public class ErrorResponse {
 
 	public ErrorResponse() {
