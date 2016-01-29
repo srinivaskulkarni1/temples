@@ -1,5 +1,7 @@
 package com.temples.in.common_utils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
@@ -27,6 +29,25 @@ public class Conversions {
 			buffer.get(bytes);
 		}
 		return new String(bytes, charset);
+	}
+	
+	public static Object byteToObject(ByteBuffer buffer){
+		Object object = null;
+		
+		byte[] array = buffer.array();
+		if(array == null || array.length == 0){
+			return null;
+		}
+		
+		try{
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(array);
+			ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+			object = objectInputStream.readObject();
+		}catch(Exception e){
+			LOGGER.error("Error occured while de-serializing object", e);
+		}
+		
+		return object;
 	}
 
 	public static <T> Object getEntityFromJson(String jsonString, Class<T> clazz) {

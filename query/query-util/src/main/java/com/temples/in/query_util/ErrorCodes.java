@@ -7,4 +7,6 @@ public class ErrorCodes {
 	public static final String illegalArgumentError = "Q104";
 	public static final String illegalStateError = "Q105";
 	public static final String dbConnectError = "Q106";
+	public static final String dbQueryError = "Q107";
+	
 }

@@ -67,7 +67,7 @@ class QueueMessageConsumer implements Consumer {
 		boolean bProcessed = false;
 		EntityInfo entityInfo = null;
 
-		LOGGER.info("Recieved queue message={}", message);
+		LOGGER.info("Received queue message={}", message);
 
 		entityInfo = (EntityInfo) Conversions.getEntityFromJson(message,
 				EntityInfo.class);
