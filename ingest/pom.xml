@@ -39,7 +39,6 @@
 	<modules>
  		<module>ingest-util</module>	
  		<module>ingest-data</module>
- 		<module>ingest-resource</module>
 		<module>ingest-interface</module>
 	</modules>
 	

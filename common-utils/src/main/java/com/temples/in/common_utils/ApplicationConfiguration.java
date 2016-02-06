@@ -23,6 +23,7 @@ public class ApplicationConfiguration extends PropertyPlaceholderConfigurer {
 	public static final String CONFIG_RABBITMQ_EXCHANGE = "rabbitmq.exchange";
 	public static final String CONFIG_RABBITMQ_ROUTING_KEY = "rabbitmq.routingkey";
 	public static final String CLIENT_INGEST_URL = "client.ingest_url";
+	public static final String CONFIG_ELASTIC_SEARCH_URL = "elasticsearch.url";
 
 	public static final String CONFIG_SEED_NODES = "cassandrastore.seednodes";
 
@@ -229,6 +230,18 @@ public class ApplicationConfiguration extends PropertyPlaceholderConfigurer {
 			LOGGER.error(
 					"Property {} not defined. Cannot connect to rabbit mq",
 					CONFIG_RABBITMQ_ROUTING_KEY);
+		}
+		return null;
+	}
+
+	public String getElasticSearchURL() {
+		String esURL = getProperty(CONFIG_ELASTIC_SEARCH_URL);
+		if (esURL != null && esURL.length() > 0) {
+			return esURL;
+		}else{
+			LOGGER.error(
+					"Property {} not defined. Cannot publish data to searcher",
+					CONFIG_ELASTIC_SEARCH_URL);
 		}
 		return null;
 	}

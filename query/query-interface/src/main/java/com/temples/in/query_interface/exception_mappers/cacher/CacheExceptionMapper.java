@@ -9,7 +9,7 @@ import net.sf.ehcache.CacheException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.temples.in.query_util.ErrorCodes;
+import com.temples.in.common_utils.ErrorCodes;
 
 @Provider
 public class CacheExceptionMapper implements ExceptionMapper<CacheException>{

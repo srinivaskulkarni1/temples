@@ -46,6 +46,8 @@ public class EHCacheManager implements IEHCacheManager {
 			Element element = new Element(baseEntity.getId(), baseEntity);
 			templesCahce.put(element);
 		}
+		
+		LOGGER.info("Successfully initialized application cache...");
 	}
 
 	CacheManager getCacheManagerInstance() {
@@ -54,6 +56,7 @@ public class EHCacheManager implements IEHCacheManager {
 
 	@Override
 	public void destroy() {
+		LOGGER.info("Shutting down cache manager...");
 		this.cacheManager.shutdown();
 	}
 
@@ -61,6 +64,8 @@ public class EHCacheManager implements IEHCacheManager {
 	@Override
 	public List<? extends BaseEntity> getAll(CacheType caches) {
 
+		LOGGER.info("Retrieving data from cache...");
+		
 		List<BaseEntity> entityList = new ArrayList<BaseEntity>();
 
 		if (null != caches && CacheType.Temples.equals(caches)) {
@@ -81,25 +86,32 @@ public class EHCacheManager implements IEHCacheManager {
 			}
 		}
 
+		LOGGER.info("Successfully retrieved data from cache...");
+
 		return entityList;
 	}
 
 	@Override
 	public void put(String id, BaseEntity entity, CacheType caches) {
 		if (null != caches && CacheType.Temples.equals(caches)) {
+			LOGGER.info("Entity Id={} | Adding entity to cache", id);
 			templesCahce.put(new Element(id, entity));
+			LOGGER.info("Entity Id={} | Successfully added entity to cache", id);
 		}
 	}
 
 	@Override
 	public BaseEntity getOne(String id, CacheType caches) {
 		if (null != caches && CacheType.Temples.equals(caches)) {
-			LOGGER.info("Entity Id={} | Adding entity to cache", id);
+			LOGGER.info("Entity Id={} | Retrieving entity from cache", id);
 			Element element = templesCahce.get(id);
 			if (element != null) {
+				LOGGER.info("Entity Id={} | Successfully retrieved entity from cache", id);
 				return getBaseEntity(element);
 			}
 		}
+		LOGGER.warn("Entity Id={} | Entity not found in cache", id);
+
 		return null;
 	}
 

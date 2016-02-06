@@ -1,4 +1,4 @@
-package com.temples.in.query_data.data_access;
+package com.temples.in.ingest_data.data_access;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

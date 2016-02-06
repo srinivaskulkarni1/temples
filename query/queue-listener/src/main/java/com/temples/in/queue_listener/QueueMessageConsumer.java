@@ -67,13 +67,17 @@ class QueueMessageConsumer implements Consumer {
 		boolean bProcessed = false;
 		EntityInfo entityInfo = null;
 
-		LOGGER.info("Received queue message={}", message);
+		LOGGER.debug("Received queue message={}", message);
 
 		entityInfo = (EntityInfo) Conversions.getEntityFromJson(message,
 				EntityInfo.class);
 
+		
 		String entityId = (String) entityInfo.getPrimaryKey().getPrimaryKeys()
 				.get(DBConstants.ID);
+		
+		LOGGER.info("Entity Id={} | Received queue message", entityId);
+
 		try {
 			bProcessed = messageProcessor.process(entityId, entityInfo);
 		} catch (QueueProcessingException e) {
@@ -81,8 +85,9 @@ class QueueMessageConsumer implements Consumer {
 			bProcessed = false;
 		} finally {
 			if (bProcessed) {
-				LOGGER.info("Entity Id={} | Processed Message={}", entityId,
+				LOGGER.debug("Entity Id={} | Processed Message={}", entityId,
 						message);
+				LOGGER.info("Entity Id={} | Successfully processed queue message", entityId);
 				channel.basicAck(envelope.getDeliveryTag(), false);
 			} else {
 				LOGGER.warn(

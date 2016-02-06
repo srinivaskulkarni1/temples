@@ -13,6 +13,8 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.temples.in.common_utils.ApplicationConfiguration;
 
 public class QueueProcessor {
+	
+	private ConnectionFactory factory;
 	private Connection connection;
 	private Channel channel;
 	private String rabbitMqHost;
@@ -44,7 +46,7 @@ public class QueueProcessor {
 
 		// Create a connection factory
 		LOGGER.info("Creating new ConnectionFactory | Host={}", rabbitMqHost);
-		ConnectionFactory factory = new ConnectionFactory();
+		factory = new ConnectionFactory();
 
 		// hostname of your rabbitmq server
 		factory.setHost(rabbitMqHost);
@@ -84,11 +86,11 @@ public class QueueProcessor {
 			this.connection.close();
 		} catch (IOException e) {
 			LOGGER.error(
-					"IOException while close queue connection. Exception Message={}",
+					"IOException while closing queue connection. Exception Message={}",
 					e.getLocalizedMessage());
 		} catch (TimeoutException e) {
 			LOGGER.error(
-					"TimeoutException while close queue connection. Exception Message={}",
+					"TimeoutException while closing queue connection. Exception Message={}",
 					e.getLocalizedMessage());
 		}
 	}

@@ -52,15 +52,23 @@ public class TempleDataLoader implements IDataLoader {
 
 		String entityId = (String) primaryKey.getPrimaryKeys().get(
 				DBConstants.ID);
+		
+		LOGGER.info("Entity Id={} | Retrieving entity from data store", entityId);
+
 		List<Params> params = paramsBuilder.build(entityId, primaryKey);
 		List<BaseEntity> list = entityById.getById(params);
 
-		LOGGER.debug("Processed {}.getOne",
-				TempleDataLoader.class.getSimpleName());
 
 		if (list.size() <= 0) {
+			LOGGER.warn("Entity Id={} | Entity not found in data store", entityId);
+			LOGGER.debug("Processed {}.getOne",
+					TempleDataLoader.class.getSimpleName());
 			return null;
 		}
+
+		LOGGER.warn("Entity Id={} | Successfully retrieved entity from data store", entityId);
+		LOGGER.debug("Processed {}.getOne",
+				TempleDataLoader.class.getSimpleName());
 		return list.get(0);
 	}
 

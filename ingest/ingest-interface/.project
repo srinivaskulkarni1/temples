@@ -3,7 +3,6 @@
   <name>ingest-interface</name>
   <comment>NO_M2ECLIPSE_SUPPORT: Project files created with the maven-eclipse-plugin are not supported in M2Eclipse.</comment>
   <projects>
-    <project>ingest-resource</project>
     <project>ingest-data</project>
     <project>data-model</project>
     <project>common-utils</project>

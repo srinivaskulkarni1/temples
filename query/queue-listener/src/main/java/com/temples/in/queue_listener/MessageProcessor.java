@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 
 import com.temples.in.cacher.CacheType;
 import com.temples.in.cacher.IEHCacheManager;
+import com.temples.in.common_utils.ErrorCodes;
 import com.temples.in.data_model.Temple;
 import com.temples.in.data_model.wrapper.Action;
 import com.temples.in.data_model.wrapper.EntityInfo;
 import com.temples.in.data_model.wrapper.EntityType;
 import com.temples.in.query_data.IDataLoader;
-import com.temples.in.query_util.ErrorCodes;
 import com.temples.in.queue_listener.exceptions.QueueProcessingException;
 
 @Component(value="messageprocessor")
@@ -41,7 +41,7 @@ public class MessageProcessor implements IMessageProcessor {
 		LOGGER.debug("Entity Id={} | Processing {}.process", entityId,
 				MessageProcessor.class.getSimpleName());
 
-		LOGGER.info("Entity Id={} | Processing Message", entityId);
+		LOGGER.info("Entity Id={} | Processing message", entityId);
 		boolean bProcessed = false;
 
 		if (entityInfo != null) {
@@ -78,7 +78,7 @@ public class MessageProcessor implements IMessageProcessor {
 				ehCacheManager.put(entityId, temple, CacheType.Temples);;
 			} else {
 				LOGGER.warn(
-						"Entity Id={} | Entity not found in data store. Ignoring queue message",
+						"Entity Id={} | Ignoring queue message",
 						entityId);
 			}
 		}
